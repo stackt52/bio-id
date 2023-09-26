@@ -25,4 +25,4 @@ docker run -d -p 9411:9411 openzipkin/zipkin
 ```
 
 ### Service Registry
-Creates a [Eureka](https://spring.io/guides/gs/service-registration-and-discovery/) service registry instance that auto-client discovery
+Creates a [Eureka](https://spring.io/guides/gs/service-registration-and-discovery/) service registry instance that support auto-client discovery
