@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: "optional:configserver:http://localhost:8088"
+  cloud:
+    gateway:
+      routes:
+        - id: enrolment-service
+          uri: lb://enrolment-service
+          predicates:
+            - Path=/enrolments/**
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/search/**
+
