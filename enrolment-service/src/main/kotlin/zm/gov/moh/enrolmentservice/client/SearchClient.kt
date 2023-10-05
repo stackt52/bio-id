@@ -13,7 +13,7 @@ interface SearchClient {
     @GetExchange("/search/{id}")
     fun getById(@PathVariable id: String): List<BioFingerPrintData>
     @PostExchange
-    fun search(@RequestBody searchPayload: List<BioFingerPrintData>): Subject
+    fun search(@RequestBody searchPayload: List<BioFingerPrintData>): Subject?
 
 
 
