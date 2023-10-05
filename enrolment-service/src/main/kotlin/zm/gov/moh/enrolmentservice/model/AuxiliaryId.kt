@@ -1,3 +1,9 @@
 package zm.gov.moh.enrolmentservice.model
 
-data class AuxiliaryId(val subjectId: Int, val type: String, val value: String)
+import java.util.UUID
+
+data class AuxiliaryId(
+    val subjectId: UUID,
+    val type: String,
+    val value: String
+)
