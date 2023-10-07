@@ -31,6 +31,7 @@ class SearchController(
 
     @PostMapping
     fun search(@RequestBody searchPayload: List<BioFingerPrintData>): Subject? {
+        logger.info("Search: {}", searchPayload)
         return null
     }
 }

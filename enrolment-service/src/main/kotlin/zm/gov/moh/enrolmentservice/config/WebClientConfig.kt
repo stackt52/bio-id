@@ -14,6 +14,10 @@ class WebClientConfig(
     @Autowired
     private val filterFunction: LoadBalancedExchangeFilterFunction
 ) {
+    /**
+     * Create a load-balanced WebClient for a service. The service discovery
+     * will resolve the instance to call using the service name specified.
+     */
     @Bean
     fun searchWebClient(): WebClient {
         return WebClient.builder()
@@ -22,6 +26,10 @@ class WebClientConfig(
             .build()
     }
 
+    /**
+     * Create a managed bean for the SearchClient object type using the WebClient
+     * bean created.
+     */
     @Bean
     fun searchClient(): SearchClient {
         val httpServiceProxyFactory =

@@ -9,6 +9,6 @@ class Subject(
     val lastName: String,
     val sex: Char,
     val dateOfBirth: LocalDate,
-    val bioFingerprints: List<BioFingerPrintData>,
-    val auxiliaryIds: List<AuxiliaryId>
+    var bioFingerprints: List<BioFingerPrintData>,
+    var auxiliaryIds: List<AuxiliaryId>
 )
