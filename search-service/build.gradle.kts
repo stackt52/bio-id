@@ -31,6 +31,10 @@ dependencies {
 	implementation ("com.machinezoo.sourceafis:sourceafis:3.18.0")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly("org.postgresql:postgresql")
+	implementation("com.zaxxer:HikariCP")
+	compileOnly("org.projectlombok:lombok")
 }
 
 dependencyManagement {

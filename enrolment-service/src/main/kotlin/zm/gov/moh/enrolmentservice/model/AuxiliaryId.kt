@@ -1,9 +1,16 @@
 package zm.gov.moh.enrolmentservice.model
 
-import java.util.UUID
+import jakarta.persistence.*
 
+@Entity
 data class AuxiliaryId(
-    val subjectId: UUID,
-    val type: String,
-    val value: String
-)
+        @Id
+        val auxiliaryId: Long,
+        @ManyToOne
+        @JoinColumn(name = "subject_id", referencedColumnName = "id")
+        var subject: Subject?,
+        val type: String?,
+        val value: String?
+) {
+    constructor() : this(0, Subject(), "", "")
+}

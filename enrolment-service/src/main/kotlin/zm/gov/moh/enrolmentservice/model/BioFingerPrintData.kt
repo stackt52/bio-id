@@ -1,9 +1,17 @@
 package zm.gov.moh.enrolmentservice.model
 
-import java.util.UUID
+import jakarta.persistence.*
 
+@Entity
 data class BioFingerPrintData(
-    val subjectId: UUID,
-    val pos: String,
-    val data: String
-)
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Long,
+        @ManyToOne
+        @JoinColumn(name = "subject_id", referencedColumnName = "id")
+        var subject: Subject?,
+        val pos: String?,
+        val data: String?
+) {
+        constructor() : this(0,Subject(),"","")
+}
