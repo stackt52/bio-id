@@ -12,8 +12,31 @@ import zm.gov.moh.searchservice.model.Subject
 import zm.gov.moh.searchservice.utils.Constants
 
 @Service
-class SearchService {
-    fun identifyFingerprint(probe: FingerprintTemplate, candidates: List<BioFingerPrintData>): BioFingerPrintData? {
+class SearchService(
+    @Autowired
+    private val getBioFingerPrintData: GetBioFingerPrintData,
+    @Autowired
+    private val getClientDetails: GetClientDetails
+) {
+    fun findClientDetails(probe: FingerprintTemplate): Subject? {
+        try {
+            val candidates = getBioFingerPrintData.getAll()
+
+            val clientBioFingerPrintData = identifyFingerprint(probe, candidates)
+
+            if (clientBioFingerPrintData != null) {
+                val clientUuid = clientBioFingerPrintData.subjectId!!
+
+                return getClientDetails.getByClientUuid(clientUuid)
+            }
+
+            return null
+        } catch (e: Exception) {
+            throw Error("find client details error occurred: ", e)
+        }
+    }
+
+    private fun identifyFingerprint(probe: FingerprintTemplate, candidates: List<BioFingerPrintData>): BioFingerPrintData? {
         val matcher = FingerprintMatcher(probe)
 
         var match = BioFingerPrintData()
