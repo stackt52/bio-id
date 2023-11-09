@@ -14,12 +14,12 @@ import java.util.UUID
 @RestController
 @RequestMapping("/enrolments")
 class EnrolmentController(
-        @Autowired
+    @Autowired
     private val enrolmentRepository: EnrolmentRepository,
-        @Autowired
+    @Autowired
     private val searchClient: SearchClient,
-        @Autowired
-        private val enrolmentService: EnrolmentService
+    @Autowired
+    private val enrolmentService: EnrolmentService
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(EnrolmentController::class.java)
@@ -29,7 +29,11 @@ class EnrolmentController(
     fun add(@RequestBody subject: Subject): Subject {
         logger.info("Enrolment add: {}", subject)
 
-        return enrolmentService.addSubject(subject)
+        try {
+            return enrolmentService.addSubject(subject)
+        } catch (e: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
         // TO BE USED WHEN SEARCH SERVICE IS WORKING
 //        if (searchClient.search(subject.bioFingerprints) == null) {
 //            val sub = enrolmentService.addSubject(subject)
@@ -41,7 +45,11 @@ class EnrolmentController(
 
     @GetMapping
     fun findAll(): List<Subject> {
-        return enrolmentService.findAll()
+        try {
+            return enrolmentService.findAll()
+        } catch (e: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
     }
 
     @GetMapping("/{id}")
@@ -64,12 +72,21 @@ class EnrolmentController(
 
     }
 
+    @PutMapping("/{id}")
+    fun updateById(@PathVariable id: UUID, @RequestBody subject: Subject): Subject {
+        try {
+            subject.id = id
+            return enrolmentService.updateById(subject)
+        } catch (e: IllegalArgumentException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
+    }
+
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: String) {
         try {
-//            val subject = enrolClient.findById(UUID.fromString(id))
-//            enrolClient.delete(subject)
-        } catch (e: IllegalArgumentException){
+            enrolmentService.deleteById(UUID.fromString(id))
+        } catch (e: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         }
     }

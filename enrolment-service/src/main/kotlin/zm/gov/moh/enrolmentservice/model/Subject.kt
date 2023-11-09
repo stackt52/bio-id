@@ -7,16 +7,16 @@ import java.util.UUID
 @Entity
 data class Subject(
         @Id
-        @GeneratedValue(strategy = GenerationType.UUID)
         var id: UUID?,
         val firstName: String?,
         val lastName: String?,
         val sex: Char?,
-        val dateOfBirth: LocalDate,
-        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "subject")
-        var bioFingerprints: MutableList<BioFingerPrintData>,
-        @OneToMany(cascade = [CascadeType.ALL], mappedBy = "subject")
-        var auxiliaryIds: MutableList<AuxiliaryId>
+        val dateOfBirth: LocalDate?,
+        @Transient
+        var bioFingerprints: MutableList<BioFingerPrintData>?,
+        @OneToMany(targetEntity = AuxiliaryId::class, cascade = [CascadeType.ALL])
+        @JoinColumn(name = "subject_id", referencedColumnName = "id")
+        var auxiliaryIds: MutableList<AuxiliaryId>?
 ){
         constructor() : this(UUID.randomUUID(), "", "",'M', LocalDate.now(), mutableListOf(),mutableListOf())
 }
