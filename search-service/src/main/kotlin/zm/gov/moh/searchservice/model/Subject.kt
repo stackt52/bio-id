@@ -1,6 +1,5 @@
 package zm.gov.moh.searchservice.model
 
-import jakarta.persistence.*
 import java.time.LocalDate
 import java.util.UUID
 
