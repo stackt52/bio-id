@@ -35,9 +35,13 @@ dependencies {
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation ("org.springframework.boot:spring-boot-starter-security")
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("com.zaxxer:HikariCP")
 	compileOnly("org.projectlombok:lombok")
+
 }
 
 dependencyManagement {
