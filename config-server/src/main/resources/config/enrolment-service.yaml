@@ -10,3 +10,11 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
