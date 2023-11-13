@@ -12,7 +12,7 @@ class SearchRepository {
     }
 
     fun getById(id: UUID): List<BioFingerPrintData> {
-        return bioFingerPrintData.filter { it.subjectId == id }
+        return bioFingerPrintData.filter { it.subject_id == id }
     }
 
     fun updateBioFingerPrintData(data: List<BioFingerPrintData>) {

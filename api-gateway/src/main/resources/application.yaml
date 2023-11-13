@@ -14,4 +14,10 @@ spring:
           uri: lb://search-service
           predicates:
             - Path=/search/**
-
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/npbvs
