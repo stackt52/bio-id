@@ -41,11 +41,11 @@ class SearchServiceApplicationTests {
 
 		val uuid = UUID.randomUUID()
 
-		val subject = Subject(UUID.randomUUID(), "Test", "Test", 'M', LocalDate.now(), mutableListOf())
-		val bioFingerPrintData = BioFingerPrintData(UUID.randomUUID(), "Test", probe)
+		val subject = Subject(UUID.randomUUID(), "Jane", "Doe", 'F', LocalDate.now(), mutableListOf())
+		val bioFingerPrintData = listOf(BioFingerPrintData(UUID.randomUUID(), "Test", probe))
 
 		`when`(getClientDetails.getByClientUuid(uuid)).thenReturn(subject)
-		`when`(getBioFingerPrintData.getAll()).thenReturn(listOf(bioFingerPrintData))
+		`when`(getBioFingerPrintData.getAll()).thenReturn(bioFingerPrintData)
 
 		val result = searchService.findClientDetails(probe)
 
