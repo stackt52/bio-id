@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: bio-data-service
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+  config:
+    import: "optional:configserver:http://localhost:8088"

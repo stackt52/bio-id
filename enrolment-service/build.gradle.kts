@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.3"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
+	id("org.openapi.generator") version "7.0.1"
 }
 
 group = "zm.gov.moh"
@@ -17,6 +18,18 @@ java {
 repositories {
 	mavenCentral()
 }
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
+    }
+}
+
+apply(plugin = "org.openapi.generator")
 
 extra["springCloudVersion"] = "2022.0.4"
 
@@ -37,6 +50,18 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+openApiGenerate {
+	inputSpec.set("$rootDir/resources/openapi/api.yaml")
+	generatorName.set("kotlin-spring")
+	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
+	modelPackage.set("zm.gov.moh.enrolmentservice.model")
+	configOptions.set(mapOf(
+		"reactive" to "true",
+		"useSpringBoot3" to "true",
+		"delegatePattern" to "true"
+	))
 }
 
 dependencyManagement {
