@@ -19,6 +19,18 @@ repositories {
 	mavenCentral()
 }
 
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
+    }
+}
+
+apply(plugin = "org.openapi.generator")
+
 extra["springCloudVersion"] = "2022.0.4"
 
 dependencies {
@@ -36,9 +48,20 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-	implementation("org.openapitools:openapi-generator-gradle-plugin")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+openApiGenerate {
+	inputSpec.set("$rootDir/resources/openapi/api.yaml")
+	generatorName.set("kotlin-spring")
+	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
+	modelPackage.set("zm.gov.moh.enrolmentservice.model")
+	configOptions.set(mapOf(
+		"reactive" to "true",
+		"useSpringBoot3" to "true",
+		"delegatePattern" to "true"
+	))
 }
 
 dependencyManagement {

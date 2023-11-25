@@ -8,73 +8,147 @@ paths:
     get:
       description: Returns all enrolled clients
       tags: [ "Enrolments" ]
-      operationId: "getEnrolments"
+      operationId: "get"
       responses:
         "200":
           description: Successful response
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/PostsList"
+                $ref: "#/components/schemas/SubjectList"
 
-  /posts/{id}:
+    post:
+      description: Register a subject for biometric fingerprint verification
+      tags: ["Enrolments"]
+      operationId: "add"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Subject"
+      responses:
+        "201":
+          description: Created
+
+  /enrolments/{id}:
     get:
-      description: Returns a post by id
-      tags: [ "Posts" ]
-      operationId: "getPost"
+      description: Returns a subject by id
+      tags: [ "Enrolments" ]
+      operationId: "getById"
       parameters:
         - name: id
           in: path
           required: true
-          description: The user id.
+          description: The subject id.
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         "200":
           description: Successful response
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/Post"
+                $ref: "#/components/schemas/Subject"
+        "400":
+          description: Specified subject ID is not a valid uuid
         "404":
           description: Post not found
+
+    put:
+      description: Update subject's basic information
+      tags: ["Enrolments"]
+      operationId: "update"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The subject id
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Subject updated successfully
+        "400":
+          description: Specified subject ID is not a valid uuid
+
+    delete:
+      description: Delete enrolled subject
+      tags: ["Enrolments"]
+      operationId: "delete"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The subject id
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Subject updated successfully
+        "400":
+          description: Specified subject ID is not a valid uuid
 
 components:
   schemas:
     SubjectList:
       type: array
       items:
-        $ref: "#/components/schemas/Post"
+        $ref: "#/components/schemas/Subject"
+
+    SourceSystemList:
+      type: array
+      items:
+        $ref: "#/components/schemas/SourceSystem"
+
+    SourceSystem:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+
+    FingerprintData:
+      type: object
+      properties:
+        subjectId:
+          type: string
+        position:
+          type: string
+        image:
+          type: string
+      required:
+        - subjectId
+        - position
+        - image
+
     Subject:
       type: object
       required:
         - firstName
         - lastName
         - sex
+        - sourceSubjectId
+        - sourceSystem
       properties:
+        id:
+          type: string
         firstName:
           type: string
         lastName:
           type: string
         sex:
+          type: string
+        sourceSubjectId:
+          type: string
+        sourceSystem:
+          type: string
+        fingerPrints:
+          type: array
+          items:
+            $ref: "#/components/schemas/FingerprintData"
 
-    PostsList:
-      "type": "array"
-      "items":
-        $ref: "#/components/schemas/Post"
-    Post:
-      "type": "object"
-      "required":
-        - "id"
-        - "userId"
-        - "title"
-      "properties":
-        id:
-          type: "integer"
-        userId:
-          type: "integer"
-        title:
-          type: "string"
-        completed:
-          type: "boolean"
