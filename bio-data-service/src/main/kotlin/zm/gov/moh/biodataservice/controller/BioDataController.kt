@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.biodataservice.model.FingerprintData
-import zm.gov.moh.biodataservice.model.FingerprintDto
+import zm.gov.moh.biodataservice.model.FingerprintDao
 import zm.gov.moh.biodataservice.service.BioDataService
 import java.util.UUID
 
@@ -23,12 +23,12 @@ class BioDataController(
     }
 
     @GetMapping
-    fun findAll(): Flux<FingerprintDto> {
+    fun findAll(): Flux<FingerprintDao> {
         return bioDataService.getAll()
     }
 
     @GetMapping("/{subjectId}")
-    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDto>? {
+    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao>? {
         return bioDataService.get(subjectId)
     }
 
@@ -39,14 +39,14 @@ class BioDataController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody fingerPrint: FingerprintDto): Mono<Boolean> {
+    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean> {
         logger.info("Recording fingerprint data = {}", fingerPrint)
         return bioDataService.add(fingerPrint)
     }
 
     @PutMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@PathVariable subjectId: UUID, @RequestBody fingerPrint: FingerprintDto): Mono<Boolean> {
+    fun update(@PathVariable subjectId: UUID, @RequestBody fingerPrint: FingerprintDao): Mono<Boolean> {
         bioDataService.remove(subjectId)
         return bioDataService.add(fingerPrint)
     }

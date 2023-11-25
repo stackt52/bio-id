@@ -9,7 +9,7 @@ import java.util.UUID
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class FingerprintDto(val subjectId: UUID, val data: List<FingerprintData>) : Serializable {
+class FingerprintDao(val subjectId: UUID, val data: List<FingerprintData>) : Serializable {
     override fun toString(): String {
         return "{subjectId: ${subjectId}, data: ${data}}"
     }
