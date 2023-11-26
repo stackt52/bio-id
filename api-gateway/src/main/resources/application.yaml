@@ -10,6 +10,15 @@ spring:
           uri: lb://enrolment-service
           predicates:
             - Path=/enrolments/**
+        - id: enrolment-service-post
+          uri: lb://enrolment-service
+          predicates:
+            - Path=/enrolments/**
+            - Method=POST,PUT
+          filters:
+            - name: RequestSize
+              args:
+                maxSize: 100 KB
         - id: search-service
           uri: lb://search-service
           predicates:
