@@ -33,7 +33,7 @@ class BioDataController(
     }
 
     @GetMapping("/src-system/{sourceSystemId}")
-    fun findBySrcSystemId(@PathVariable sourceSystemId: UUID): List<FingerprintData>? {
+    fun findBySrcSystemId(@PathVariable sourceSystemId: UUID): Flux<FingerprintData>? {
         return null
     }
 

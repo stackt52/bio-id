@@ -24,7 +24,7 @@ class EnrolmentController(
 
     @PostMapping
     fun add(@RequestBody subject: Subject): Subject {
-        if (searchClient.search(subject.bioFingerprints) == null) {
+        if (searchClient.search(subject.fingerprintData) == null) {
             val sub = enrolmentRepository.addEnrolment(subject)
             logger.info("Enrolment add: {}", sub)
             return sub
@@ -42,7 +42,7 @@ class EnrolmentController(
         logger.info("Enrolment find: id={}", id)
         try {
             val subject = enrolmentRepository.findById(UUID.fromString(id))
-            subject.bioFingerprints =
+            subject.fingerprintData =
                 searchClient.getById(id) //TODO: Change this to pull from the biometrics-data service
             return subject
         } catch (e: IllegalArgumentException) {
