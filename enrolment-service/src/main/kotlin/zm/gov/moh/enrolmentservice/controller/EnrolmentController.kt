@@ -9,6 +9,7 @@ import zm.gov.moh.enrolmentservice.client.SearchClient
 import zm.gov.moh.enrolmentservice.model.Subject
 import zm.gov.moh.enrolmentservice.repository.EnrolmentRepository
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
+import zm.gov.moh.enrolmentservice.service.EnrolmentService
 import java.util.UUID
 
 @RestController
@@ -27,6 +28,10 @@ class EnrolmentController(
 
     @PostMapping
     fun add(@RequestBody subject: Subject): Subject {
+        if (searchClient.search(subject.fingerprintData) == null) {
+            val sub = enrolmentRepository.addEnrolment(subject)
+            logger.info("Enrolment add: {}", sub)
+            return sub
         logger.info("Enrolment add: {}", subject)
 
         try {

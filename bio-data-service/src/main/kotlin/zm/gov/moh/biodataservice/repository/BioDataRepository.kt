@@ -25,7 +25,7 @@ class BioDataRepository(
     }
 
     fun findAll(): Flux<FingerprintDao> {
-        return reactiveTemplate.keys("*")
+        return reactiveTemplate.scan()
             .flatMap(reactiveTemplate.opsForValue()::get);
     }
 
