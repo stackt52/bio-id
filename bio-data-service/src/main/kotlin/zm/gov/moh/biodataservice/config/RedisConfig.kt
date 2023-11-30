@@ -8,11 +8,9 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.ReactiveRedisOperations
 import org.springframework.data.redis.core.ReactiveRedisTemplate
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
-import org.springframework.data.redis.serializer.RedisSerializationContext
-import org.springframework.data.redis.serializer.RedisSerializationContext.RedisSerializationContextBuilder
-import org.springframework.data.redis.serializer.StringRedisSerializer
+import org.springframework.data.redis.serializer.*
 import zm.gov.moh.biodataservice.model.FingerprintDao
+import java.util.UUID
 
 
 @Configuration
@@ -32,15 +30,14 @@ class RedisConfig {
 
     @Bean
     fun redisTemplate(connectionFactory: ReactiveRedisConnectionFactory): ReactiveRedisOperations<String, FingerprintDao> {
-        val valueSerializer: Jackson2JsonRedisSerializer<FingerprintDao> =
-            Jackson2JsonRedisSerializer(FingerprintDao::class.java)
+        val serializationContext: RedisSerializationContext<String, FingerprintDao> = RedisSerializationContext
+            .newSerializationContext<String, FingerprintDao>(StringRedisSerializer())
+            .key(StringRedisSerializer())
+            .value(Jackson2JsonRedisSerializer(FingerprintDao::class.java))
+            .hashKey(Jackson2JsonRedisSerializer(UUID::class.java))
+            .hashValue(Jackson2JsonRedisSerializer(FingerprintDao::class.java))
+            .build()
 
-        val builder: RedisSerializationContextBuilder<String, FingerprintDao> =
-            RedisSerializationContext.newSerializationContext(StringRedisSerializer())
-
-        val context: RedisSerializationContext<String, FingerprintDao> =
-            builder.value(valueSerializer).build()
-
-        return ReactiveRedisTemplate(connectionFactory, context)
+        return ReactiveRedisTemplate(connectionFactory, serializationContext)
     }
 }
