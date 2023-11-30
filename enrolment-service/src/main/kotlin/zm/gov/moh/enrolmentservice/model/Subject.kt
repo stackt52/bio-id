@@ -15,7 +15,7 @@ data class Subject(
     val dateOfBirth: LocalDate?,
     val sourceSystemCode: String,
     @Transient
-    var bioFingerprints: MutableList<BioFingerPrintData>?,
+    var fingerprintData: MutableList<FingerprintData>?,
     @OneToMany(targetEntity = AuxiliaryId::class, cascade = [CascadeType.ALL])
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
     var auxiliaryIds: MutableList<AuxiliaryId>?

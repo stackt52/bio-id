@@ -31,6 +31,6 @@ class SecurityConfig {
 
     @Bean
     fun jwtDecoder(): JwtDecoder {
-        return NimbusJwtDecoder.withJwkSetUri("http://localhost:8080/realms/npbvs/protocol/openid-connect/token").build()
+        return NimbusJwtDecoder.withJwkSetUri("http://localhost:8089/realms/npbvs/protocol/openid-connect/token").build()
     }
 }
