@@ -1,59 +1,59 @@
 package zm.gov.moh.searchservice.service
 
+import com.machinezoo.sourceafis.FingerprintImage
 import com.machinezoo.sourceafis.FingerprintMatcher
 import com.machinezoo.sourceafis.FingerprintTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import zm.gov.moh.searchservice.extern.GetBioFingerPrintData
-import zm.gov.moh.searchservice.extern.GetClientDetails
-import zm.gov.moh.searchservice.model.BioFingerPrintData
-import zm.gov.moh.searchservice.model.SearchPayload
+import reactor.core.publisher.Mono
+import zm.gov.moh.searchservice.model.FingerprintDao
 import zm.gov.moh.searchservice.model.Subject
-import zm.gov.moh.searchservice.utils.Constants
+import zm.gov.moh.searchservice.repository.SearchRepository
+import java.util.*
 
 @Service
 class SearchService(
     @Autowired
-    private val getBioFingerPrintData: GetBioFingerPrintData,
-    @Autowired
-    private val getClientDetails: GetClientDetails
+    private val searchRepository: SearchRepository
 ) {
-    fun findClientDetails(probe: FingerprintTemplate): Subject? {
-        try {
-            val candidates = getBioFingerPrintData.getAll()
+    fun findSubjectDetails(subjectId: UUID): Mono<Subject> {
+        val subject = searchRepository.findSubjectBySubjectId(subjectId)
 
-            val clientBioFingerPrintData = identifyFingerprint(probe, candidates)
-
-            if (clientBioFingerPrintData != null) {
-                val clientUuid = clientBioFingerPrintData.subjectId!!
-
-                return getClientDetails.getByClientUuid(clientUuid)
-            }
-
-            return null
-        } catch (e: Exception) {
-            throw Error("find client details error occurred: ", e)
-        }
+        return Mono.just(subject)
     }
 
-    private fun identifyFingerprint(probe: FingerprintTemplate, candidates: List<BioFingerPrintData>): BioFingerPrintData? {
+    fun findSubjectFingerprint(probeData: ByteArray, srcSystemId: String): Mono<FingerprintDao> {
+        val fingerprintDaoFlux = searchRepository.findFingerprintDaoBySrcSystemId(srcSystemId)
+
+        return fingerprintDaoFlux.filter { fingerprint ->
+            fingerprint.data.any { compareFingerprint(probeData, it.image) }
+        }.next()
+    }
+
+
+    /**
+     * Compare two fingerprint images and return a boolean indicating the similarity.
+     *
+     * @param probeData Byte array representing the fingerprint image data to probe.
+     * @param candidateData Byte array representing the fingerprint image data to compare against.
+     * @return True if the fingerprints are similar, false otherwise.
+     */
+    private fun compareFingerprint(probeData: ByteArray, candidateData: ByteArray): Boolean {
+        val probeImage = FingerprintImage(probeData)
+        val probe = FingerprintTemplate(probeImage)
+
+        val candidateImage = FingerprintImage(candidateData)
+        val candidate = FingerprintTemplate(candidateImage)
+
         val matcher = FingerprintMatcher(probe)
 
-        var match = BioFingerPrintData()
+        val similarity = matcher.match(candidate)
 
-        var max = Double.NEGATIVE_INFINITY
+        return similarity >= FINGERPRINT_SIMILARITY_THRESHOLD
+    }
 
-        for (candidate in candidates) {
-           val similarity = matcher.match(candidate.data)
-
-            if (similarity > max) {
-                max = similarity
-                match = candidate
-            }
-        }
-
-        if (max >= Constants.FINGERPRINT_SIMILARITY_THRESHOLD) return match
-
-        return null
+    companion object {
+        // according to sourceAFIS docs 40 corresponds to false match rate 0.01% which is good starting point
+        private const val FINGERPRINT_SIMILARITY_THRESHOLD = 40
     }
 }

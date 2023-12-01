@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import zm.gov.moh.searchservice.extern.GetSubject
 import zm.gov.moh.searchservice.model.SearchPayload
 import zm.gov.moh.searchservice.model.Subject
 import zm.gov.moh.searchservice.service.SearchService
@@ -16,16 +17,14 @@ import zm.gov.moh.searchservice.service.SearchService
 @RequestMapping("/search")
 class SearchController(
     @Autowired
-    private val searchService: SearchService
+    private val searchService: SearchService,
 ) {
     @PostMapping
     fun search(@RequestBody searchPayload: SearchPayload): Subject? {
         logger.info("Search: {}", searchPayload)
 
         try {
-            val probe = searchPayload.probe!!
-
-            return searchService.findClientDetails(probe) ?: throw Error("client details not found")
+            return null
         } catch (e: Exception) {
             logger.error("search error: ", e)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
