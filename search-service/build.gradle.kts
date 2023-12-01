@@ -31,6 +31,8 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	implementation ("com.machinezoo.sourceafis:sourceafis:3.18.0")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
