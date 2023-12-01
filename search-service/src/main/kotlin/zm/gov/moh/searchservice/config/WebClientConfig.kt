@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
-import zm.gov.moh.searchservice.extern.GetBioFingerPrintData
-import zm.gov.moh.searchservice.extern.GetClientDetails
+import zm.gov.moh.searchservice.extern.GetSubject
+import zm.gov.moh.searchservice.extern.GetFingerprintData
 
 @Configuration
 class WebClientConfig(
@@ -16,9 +16,9 @@ class WebClientConfig(
     private val filterFunction: LoadBalancedExchangeFilterFunction
 ) {
     @Bean
-    fun biometricDataWebClient(): WebClient {
+    fun bioDataWebClient(): WebClient {
         return WebClient.builder()
-            .baseUrl("http://biometric-data-service")
+            .baseUrl("http://bio-data")
             .filter(filterFunction)
             .build()
     }
@@ -32,20 +32,20 @@ class WebClientConfig(
     }
 
     @Bean
-    fun getBioFingerPrintData(): GetBioFingerPrintData {
+    fun getBioFingerPrintData(): GetFingerprintData {
         val httpServiceProxyFunction = HttpServiceProxyFactory
-            .builder(WebClientAdapter.forClient(biometricDataWebClient()))
+            .builder(WebClientAdapter.forClient(bioDataWebClient()))
             .build()
 
-        return httpServiceProxyFunction.createClient(GetBioFingerPrintData::class.java)
+        return httpServiceProxyFunction.createClient(GetFingerprintData::class.java)
     }
 
     @Bean
-    fun getClientDetails(): GetClientDetails {
+    fun getClientDetails(): GetSubject {
         val httpServiceProxyFactory = HttpServiceProxyFactory
             .builder(WebClientAdapter.forClient(enrolmentWebClient()))
             .build()
 
-        return httpServiceProxyFactory.createClient(GetClientDetails::class.java)
+        return httpServiceProxyFactory.createClient(GetSubject::class.java)
     }
 }
