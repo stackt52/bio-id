@@ -1,13 +1,15 @@
 spring:
   application:
     name: bio-data-service
+  config:
+    import: "optional:configserver:http://localhost:8088"
   data:
     redis:
       host: localhost
       port: 6379
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-  config:
-    import: "optional:configserver:http://localhost:8088"
+      repositories:
+        enabled: false
+# Ideally this port configuration for Netty should be pulled from the config server
+# Will fix this later on
+server:
+  port: 8083

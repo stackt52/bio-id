@@ -4,8 +4,8 @@ import zm.gov.moh.biodataservice.util.Position
 import java.io.Serializable
 
 data class FingerprintData(
-    val pos: Position,
-    val image: ByteArray
+    var pos: Position = Position.RIGHT_INDEX,
+    var image: ByteArray = ByteArray(0)
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

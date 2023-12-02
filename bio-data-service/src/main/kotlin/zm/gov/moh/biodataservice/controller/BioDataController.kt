@@ -46,14 +46,14 @@ class BioDataController(
 
     @PutMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@PathVariable subjectId: UUID, @RequestBody fingerPrint: FingerprintDao): Mono<Boolean> {
-        bioDataService.remove(subjectId)
-        return bioDataService.add(fingerPrint)
+    fun update(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean> {
+        logger.info("Updating fingerprint data ={}", fingerPrint)
+        return bioDataService.update(fingerPrint)
     }
 
     @DeleteMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable subjectId: UUID) {
-        bioDataService.remove(subjectId)
+    fun delete(@PathVariable subjectId: UUID): Mono<Boolean> {
+        return bioDataService.remove(subjectId)
     }
 }
