@@ -5,16 +5,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.service.annotation.GetExchange
 import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
-import zm.gov.moh.enrolmentservice.model.BioFingerPrintData
+import zm.gov.moh.enrolmentservice.model.FingerprintData
 import zm.gov.moh.enrolmentservice.model.Subject
 
 @HttpExchange
 interface SearchClient {
     @GetExchange("/search/{id}")
-    fun getById(@PathVariable id: String): List<BioFingerPrintData>
+    fun getById(@PathVariable id: String): List<FingerprintData>
     @PostExchange
-    fun search(@RequestBody searchPayload: List<BioFingerPrintData>): Subject?
-
-
-
+    fun search(@RequestBody searchPayload: List<FingerprintData>): Subject?
 }

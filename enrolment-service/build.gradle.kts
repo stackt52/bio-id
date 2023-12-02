@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.3"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
+	id("org.openapi.generator") version "7.0.1"
 }
 
 group = "zm.gov.moh"
@@ -18,6 +19,18 @@ repositories {
 	mavenCentral()
 }
 
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
+    }
+}
+
+apply(plugin = "org.openapi.generator")
+
 extra["springCloudVersion"] = "2022.0.4"
 
 dependencies {
@@ -27,6 +40,9 @@ dependencies {
 	implementation("io.micrometer:micrometer-tracing-bridge-brave")
 	implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -34,6 +50,18 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+openApiGenerate {
+	inputSpec.set("$rootDir/resources/openapi/api.yaml")
+	generatorName.set("kotlin-spring")
+	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
+	modelPackage.set("zm.gov.moh.enrolmentservice.model")
+	configOptions.set(mapOf(
+		"reactive" to "true",
+		"useSpringBoot3" to "true",
+		"delegatePattern" to "true"
+	))
 }
 
 dependencyManagement {
