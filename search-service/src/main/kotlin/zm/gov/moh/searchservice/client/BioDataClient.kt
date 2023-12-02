@@ -1,4 +1,4 @@
-package zm.gov.moh.searchservice.extern
+package zm.gov.moh.searchservice.client
 
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.service.annotation.GetExchange
@@ -8,7 +8,7 @@ import zm.gov.moh.searchservice.model.FingerprintDao
 import java.util.UUID
 
 @HttpExchange
-interface GetFingerprintData {
+interface BioDataClient {
     @GetExchange("/src-system/{srcSystemId}")
-    fun getBySrcSystemId(@PathVariable srcSystemId: UUID): Flux<FingerprintDao>
+    fun findFingerprintDataBySrcSystemId(@PathVariable srcSystemId: UUID): Flux<FingerprintDao>
 }

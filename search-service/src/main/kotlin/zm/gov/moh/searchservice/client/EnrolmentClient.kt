@@ -1,4 +1,4 @@
-package zm.gov.moh.searchservice.extern
+package zm.gov.moh.searchservice.client
 
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.service.annotation.GetExchange
@@ -7,7 +7,7 @@ import zm.gov.moh.searchservice.model.Subject
 import java.util.UUID
 
 @HttpExchange
-interface GetSubject {
+interface EnrolmentClient {
     @GetExchange("/{id}")
-    fun findById(@PathVariable id: UUID): Subject
+    fun findSubjectById(@PathVariable id: UUID): Subject
 }
