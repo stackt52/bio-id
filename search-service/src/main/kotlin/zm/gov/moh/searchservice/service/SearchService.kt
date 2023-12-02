@@ -25,8 +25,8 @@ class SearchService(
     fun findSubjectFingerprint(probeData: ByteArray, srcSystemId: String): Mono<FingerprintDao> {
         val fingerprintDaoFlux = searchRepository.findFingerprintDaoBySrcSystemId(srcSystemId)
 
-        return fingerprintDaoFlux.filter { fingerprint ->
-            fingerprint.data.any { compareFingerprint(probeData, it.image) }
+        return fingerprintDaoFlux.filter { fingerprintDao ->
+            fingerprintDao.data.any { compareFingerprint(probeData, it.image) }
         }.next()
     }
 

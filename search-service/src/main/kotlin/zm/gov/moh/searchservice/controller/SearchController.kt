@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import reactor.core.publisher.Mono
 import zm.gov.moh.searchservice.extern.GetSubject
 import zm.gov.moh.searchservice.model.SearchPayload
 import zm.gov.moh.searchservice.model.Subject
@@ -20,11 +21,19 @@ class SearchController(
     private val searchService: SearchService,
 ) {
     @PostMapping
-    fun search(@RequestBody searchPayload: SearchPayload): Subject? {
+    fun search(@RequestBody searchPayload: SearchPayload): Mono<Subject> {
         logger.info("Search: {}", searchPayload)
 
         try {
-            return null
+            val probeData = searchPayload.image
+            val srcSystemId = searchPayload.sourceSystemCode
+
+            val fingerprint = searchService.findSubjectFingerprint(probeData, srcSystemId)
+
+            return fingerprint.flatMap {
+                searchService.findSubjectDetails(it.subjectId)
+            }
+
         } catch (e: Exception) {
             logger.error("search error: ", e)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
