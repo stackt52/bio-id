@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.biodataservice.model.FingerprintData
@@ -28,8 +29,15 @@ class BioDataController(
     }
 
     @GetMapping("/{subjectId}")
-    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao>? {
-        return bioDataService.get(subjectId)
+    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao> {
+        return bioDataService.get(subjectId).switchIfEmpty(
+            Mono.error(
+                ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No fingerprint data found for subjectId = $subjectId."
+                )
+            )
+        )
     }
 
     @GetMapping("/src-system/{sourceSystemId}")

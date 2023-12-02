@@ -21,7 +21,7 @@ class BioDataService(
         return repository.save(data)
     }
 
-    fun get(subjectId: UUID): Mono<FingerprintDao>? {
+    fun get(subjectId: UUID): Mono<FingerprintDao> {
         return repository.findById(subjectId)
     }
 

@@ -33,7 +33,7 @@ class BioDataRepository(
             .flatMap { Mono.just(it.value) }
     }
 
-    fun findById(id: UUID): Mono<FingerprintDao>? {
+    fun findById(id: UUID): Mono<FingerprintDao> {
         return hashOperations.get(HashKey.FINGER_PRINT_DATA, id)
     }
 
