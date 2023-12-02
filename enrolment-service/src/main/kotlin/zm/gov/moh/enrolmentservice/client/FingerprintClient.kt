@@ -5,13 +5,15 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.service.annotation.GetExchange
 import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
-import zm.gov.moh.enrolmentservice.model.FingerprintData
-import zm.gov.moh.enrolmentservice.model.Subject
+import reactor.core.publisher.Mono
+import zm.gov.moh.enrolmentservice.model.FingerprintDao
+import java.util.*
 
 @HttpExchange
-interface SearchClient {
-    @GetExchange("/search/{id}")
-    fun getById(@PathVariable id: String): List<FingerprintData>
+interface FingerprintClient {
+    @GetExchange("/bio-data/{subjectId}")
+    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao>?
+
     @PostExchange
-    fun search(@RequestBody searchPayload: MutableList<FingerprintData>?): Subject?
+    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean>
 }
