@@ -1,8 +1,10 @@
 package zm.gov.moh.searchservice.model
 
+import java.util.UUID
+
 data class SearchPayload(
     val image: ByteArray,
-    val sourceSystemCode: String
+    val sourceSystemId: UUID
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -11,14 +13,14 @@ data class SearchPayload(
         other as SearchPayload
 
         if (!image.contentEquals(other.image)) return false
-        if (sourceSystemCode != other.sourceSystemCode) return false
+        if (sourceSystemId != other.sourceSystemId) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = image.contentHashCode()
-        result = 31 * result + sourceSystemCode.hashCode()
+        result = 31 * result + sourceSystemId.hashCode()
         return result
     }
 }

@@ -16,7 +16,7 @@ class SearchRepository(
     @Autowired
     private val getSubject: GetSubject
 ) {
-    fun findFingerprintDaoBySrcSystemId(srcSystemId: String): Flux<FingerprintDao> {
+    fun findFingerprintDaoBySrcSystemId(srcSystemId: UUID): Flux<FingerprintDao> {
         return getFingerprintData.getBySrcSystemId(srcSystemId)
     }
 

@@ -18,7 +18,7 @@ class WebClientConfig(
     @Bean
     fun bioDataWebClient(): WebClient {
         return WebClient.builder()
-            .baseUrl("http://bio-data")
+            .baseUrl("http://bio-data-service")
             .filter(filterFunction)
             .build()
     }

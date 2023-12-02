@@ -22,7 +22,7 @@ class SearchService(
         return Mono.just(subject)
     }
 
-    fun findSubjectFingerprint(probeData: ByteArray, srcSystemId: String): Mono<FingerprintDao> {
+    fun findSubjectFingerprint(probeData: ByteArray, srcSystemId: UUID): Mono<FingerprintDao> {
         val fingerprintDaoFlux = searchRepository.findFingerprintDaoBySrcSystemId(srcSystemId)
 
         return fingerprintDaoFlux.filter { fingerprintDao ->

@@ -26,7 +26,7 @@ class SearchController(
 
         try {
             val probeData = searchPayload.image
-            val srcSystemId = searchPayload.sourceSystemCode
+            val srcSystemId = searchPayload.sourceSystemId
 
             val fingerprint = searchService.findSubjectFingerprint(probeData, srcSystemId)
 
