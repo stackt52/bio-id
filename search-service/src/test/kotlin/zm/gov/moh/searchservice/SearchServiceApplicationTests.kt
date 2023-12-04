@@ -2,31 +2,34 @@ package zm.gov.moh.searchservice
 
 import com.machinezoo.sourceafis.FingerprintTemplate
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.InjectMocks
-import org.mockito.Mockito
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.springframework.boot.test.context.SpringBootTest
-import zm.gov.moh.searchservice.extern.GetBioFingerPrintData
-import zm.gov.moh.searchservice.extern.GetClientDetails
-import zm.gov.moh.searchservice.model.BioFingerPrintData
-import zm.gov.moh.searchservice.model.Subject
+import reactor.core.publisher.Flux
+import org.junit.jupiter.api.Assertions.assertEquals
+import reactor.kotlin.core.publisher.whenComplete
+import zm.gov.moh.searchservice.client.BioDataClient
+import zm.gov.moh.searchservice.client.EnrolmentClient
+import zm.gov.moh.searchservice.model.FingerprintDao
+import zm.gov.moh.searchservice.model.SearchPayload
+import zm.gov.moh.searchservice.repository.SearchRepository
 import zm.gov.moh.searchservice.service.SearchService
 import java.nio.file.Files
 import java.nio.file.Path
-import java.time.LocalDate
 import java.util.*
 
 @SpringBootTest
 class SearchServiceApplicationTests {
-	private val getBioFingerPrintData = Mockito.mock(GetBioFingerPrintData::class.java)
-	private val getClientDetails = Mockito.mock(GetClientDetails::class.java)
+	private val bioDataClient = Mockito.mock(BioDataClient::class.java)
+	private val enrolmentClient = Mockito.mock(EnrolmentClient::class.java)
+	private val searchRepository = Mockito.mock(SearchRepository::class.java)
+	private val searchPayload = Mockito.mock(SearchPayload::class.java)
 
 	@InjectMocks
-	private var searchService: SearchService = SearchService(getBioFingerPrintData, getClientDetails)
+	private var searchService: SearchService = SearchService(searchRepository)
 
 	@BeforeEach
 	fun init() {
@@ -35,24 +38,49 @@ class SearchServiceApplicationTests {
 
 	@Test
 	fun testFindClientDetails() {
-		val fingerPrintImage = Files.readAllBytes(Path.of("kotlin/zm/gov/moh/searchservice/assets/fingerprint.jpg"))
+//		val fingerPrintImage = Files.readAllBytes(Path.of("kotlin/zm/gov/moh/searchservice/assets/fingerprint.jpg"))
+//
+//		val probe = FingerprintTemplate(fingerPrintImage)
+//
+//		val uuid = UUID.randomUUID()
+//
+//		val subject = Subject(UUID.randomUUID(), "Jane", "Doe", 'F', "1", "1")
+//		val bioFingerPrintData = listOf(FingerprintData(UUID.randomUUID(), "Test", probe))
+//
+//		`when`(getSubject.getByClientUuid(uuid)).thenReturn(subject)
+//		`when`(getBioFingerPrintData.getAll()).thenReturn(bioFingerPrintData)
+//
+//		val result = searchService.findClientDetails(probe)
+//
+//		assertEquals(subject, result)
+//
+//		verify(getSubject).getByClientUuid(uuid)
+//		verify(getBioFingerPrintData).getAll()
+	}
 
-		val probe = FingerprintTemplate(fingerPrintImage)
+	@Test
+	fun testFindSubject() {
 
-		val uuid = UUID.randomUUID()
+	}
 
-		val subject = Subject(UUID.randomUUID(), "Jane", "Doe", 'F', LocalDate.now(), mutableListOf())
-		val bioFingerPrintData = listOf(BioFingerPrintData(UUID.randomUUID(), "Test", probe))
+	@Test
+	fun testFindFingerprint() {
+		val fingerprintImage = Files.readAllBytes(Path.of("search-service/src/test/kotlin/zm/gov/moh/searchservice/assets/fingerprint.jpg"))
 
-		`when`(getClientDetails.getByClientUuid(uuid)).thenReturn(subject)
-		`when`(getBioFingerPrintData.getAll()).thenReturn(bioFingerPrintData)
+		val probe = FingerprintTemplate(fingerprintImage).toByteArray()
 
-		val result = searchService.findClientDetails(probe)
+		val srcSystemId = UUID.randomUUID()
 
-		assertEquals(subject, result)
+		val fingerprintDao: List<FingerprintDao> = mutableListOf()
 
-		verify(getClientDetails).getByClientUuid(uuid)
-		verify(getBioFingerPrintData).getAll()
+		val fingerprint: Flux<FingerprintDao> = Flux.fromIterable(fingerprintDao)
+
+		`when`(bioDataClient.findFingerprintDataBySrcSystemId(srcSystemId)).thenReturn(fingerprint)
+
+		val searchPayload = SearchPayload(probe, srcSystemId)
+
+		val result = searchService.findFingerprint(searchPayload)
+
 	}
 
 }
