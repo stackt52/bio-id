@@ -5,10 +5,6 @@ import com.machinezoo.sourceafis.FingerprintMatcher
 import com.machinezoo.sourceafis.FingerprintTemplate
 
 object Fingerprint {
-
-    // according to sourceAFIS docs 40 corresponds to false match rate 0.01% which is good starting point
-    private const val FINGERPRINT_SIMILARITY_THRESHOLD = 40
-
     /**
      * Compare two fingerprint images and return a boolean indicating the similarity.
      *
@@ -33,4 +29,7 @@ object Fingerprint {
 
         return FingerprintTemplate(image)
     }
+
+    // according to sourceAFIS docs 40 corresponds to false match rate 0.01% which is good starting point
+    private const val FINGERPRINT_SIMILARITY_THRESHOLD = 40
 }
