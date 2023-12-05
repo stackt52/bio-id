@@ -4,12 +4,12 @@ import java.time.LocalDate
 import java.util.UUID
 
 class Subject(
-    val id: UUID,
-    val firstName: String,
-    val lastName: String,
-    val sex: Char,
-    val dateOfBirth: LocalDate,
-    val sourceSystemCode: String,
-    var fingerprintData: List<FingerprintData>,
-    var auxiliaryIds: List<AuxiliaryId>
+    var id: UUID = UUID.randomUUID(),
+    var firstName: String = "",
+    var lastName: String = "",
+    var sex: Char = 'M',
+    var dateOfBirth: LocalDate = LocalDate.now(),
+    var sourceSystemCode: String = "",
+    var fingerprintData: List<FingerprintData> = mutableListOf(),
+    var auxiliaryIds: List<AuxiliaryId> = mutableListOf()
 )
