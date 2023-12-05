@@ -1,21 +1,26 @@
 package zm.gov.moh.searchservice.repository
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import zm.gov.moh.searchservice.model.BioFingerPrintData
+import reactor.core.publisher.Flux
+import zm.gov.moh.searchservice.client.EnrolmentClient
+import zm.gov.moh.searchservice.client.BioDataClient
+import zm.gov.moh.searchservice.model.FingerprintDao
+import zm.gov.moh.searchservice.model.Subject
 import java.util.UUID
 
 @Repository
-class SearchRepository {
-
-    companion object {
-        private val bioFingerPrintData = mutableListOf<BioFingerPrintData>()
+class SearchRepository(
+    @Autowired
+    private val bioDataClient: BioDataClient,
+    @Autowired
+    private val enrolmentClient: EnrolmentClient
+) {
+    fun findFingerprintBySrcSystemId(srcSystemId: UUID): Flux<FingerprintDao> {
+        return bioDataClient.findFingerprintDataBySrcSystemId(srcSystemId)
     }
 
-    fun getById(id: UUID): List<BioFingerPrintData> {
-        return bioFingerPrintData.filter { it.subjectId == id }
-    }
-
-    fun updateBioFingerPrintData(data: List<BioFingerPrintData>) {
-
+    fun findSubjectBySubjectId(subjectId: UUID): Subject {
+        return enrolmentClient.findSubjectById(subjectId)
     }
 }

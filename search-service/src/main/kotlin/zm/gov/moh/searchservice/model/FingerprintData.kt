@@ -1,12 +1,12 @@
 package zm.gov.moh.searchservice.model
 
-import zm.gov.moh.searchservice.util.Position
-
+import zm.gov.moh.searchservice.utils.Position
+import java.io.Serializable
 
 data class FingerprintData(
     val pos: Position,
-    val data: ByteArray
-) {
+    val image: ByteArray
+) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -14,14 +14,18 @@ data class FingerprintData(
         other as FingerprintData
 
         if (pos != other.pos) return false
-        if (!data.contentEquals(other.data)) return false
+        if (!image.contentEquals(other.image)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = pos.hashCode()
-        result = 31 * result + data.contentHashCode()
+        result = 31 * result + image.contentHashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "{pos: ${pos}, image: ${image}}"
     }
 }
