@@ -9,8 +9,8 @@ import java.util.*
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class FingerprintDao(val subjectId: UUID, val data: List<FingerprintData>) : Serializable {
+class FingerprintDao(val subjectId: UUID, val image: List<FingerprintData>) : Serializable {
     override fun toString(): String {
-        return "{subjectId: ${subjectId}, data: ${data}}"
+        return "{subjectId: ${subjectId}, data: ${image}}"
     }
 }

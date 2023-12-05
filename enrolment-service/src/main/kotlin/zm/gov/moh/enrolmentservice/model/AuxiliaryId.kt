@@ -2,7 +2,6 @@ package zm.gov.moh.enrolmentservice.model
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import java.util.UUID
 
 @Entity
 data class AuxiliaryId(

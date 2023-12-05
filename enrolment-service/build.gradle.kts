@@ -55,17 +55,17 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-openApiGenerate {
-	inputSpec.set("$rootDir/resources/openapi/api.yaml")
-	generatorName.set("kotlin-spring")
-	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
-	modelPackage.set("zm.gov.moh.enrolmentservice.model")
-	configOptions.set(mapOf(
-		"reactive" to "true",
-		"useSpringBoot3" to "true",
-		"delegatePattern" to "true"
-	))
-}
+//openApiGenerate {
+//	inputSpec.set("$rootDir/resources/openapi/api.yaml")
+//	generatorName.set("kotlin-spring")
+//	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
+//	modelPackage.set("zm.gov.moh.enrolmentservice.model")
+//	configOptions.set(mapOf(
+//		"reactive" to "true",
+//		"useSpringBoot3" to "true",
+//		"delegatePattern" to "true"
+//	))
+//}
 
 dependencyManagement {
 	imports {

@@ -12,6 +12,7 @@ import zm.gov.moh.enrolmentservice.model.Subject
 interface SearchClient {
     @GetExchange("/search/{id}")
     fun getById(@PathVariable id: String): List<FingerprintData>
+
     @PostExchange("/search")
     fun search(@RequestBody searchPayload: MutableList<FingerprintData>?): Subject?
 }

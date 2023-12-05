@@ -13,7 +13,7 @@ data class Subject(
     val lastName: String?,
     val sex: Char?,
     val dateOfBirth: LocalDate?,
-    val sourceSystemCode: String,
+    val sourceSystemCode: String?,
     @Transient
     var fingerprintData: MutableList<FingerprintData>?,
     @OneToMany(targetEntity = AuxiliaryId::class, cascade = [CascadeType.ALL])
