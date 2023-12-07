@@ -9,6 +9,6 @@ import java.util.UUID
 
 @HttpExchange
 interface BioDataClient {
-    @GetExchange("/src-system/{srcSystemId}")
+    @GetExchange("/bio-data/src-system/{srcSystemId}")
     fun findFingerprintDataBySrcSystemId(@PathVariable srcSystemId: UUID): Flux<FingerprintDao>
 }

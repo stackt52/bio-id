@@ -1,12 +1,15 @@
 package zm.gov.moh.searchservice.model
 
+import java.time.LocalDate
 import java.util.*
 
 data class Subject(
     val id: UUID,
     val firstName: String,
-    val surname: String,
+    val lastName: String,
     val sex: Char,
-    val sourceSubjectId: String,
-    val sourceSystemId: String
+    val dateOfBirth: LocalDate,
+    val sourceSystemCode: String,
+    val fingerprintData: MutableList<FingerprintData>,
+    val auxiliaryIds: MutableList<AuxiliaryId>
 )

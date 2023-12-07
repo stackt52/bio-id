@@ -8,6 +8,6 @@ import java.util.UUID
 
 @HttpExchange
 interface EnrolmentClient {
-    @GetExchange("/{id}")
+    @GetExchange("/enrolment/{id}")
     fun findSubjectById(@PathVariable id: UUID): Subject
 }
