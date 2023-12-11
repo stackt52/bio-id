@@ -32,6 +32,9 @@ class EnrolmentService(
     @Transactional
     fun addSubject(subject: Subject): Mono<Subject> {
         if (searchClient.search(subject.fingerprintData) == null) {
+            // We will need to changes the call to the subjectRepository.save for this is a
+            // blocking call and potentially might introduce thread starvation.
+            // Ideal implmentation would be to use R2DBC for the relational datastore
             return Mono.just(subjectRepository.save(subject))
                 .map { i -> FingerprintDao(i.id!!, subject.fingerprintData!!) }
                 .flatMap { i ->
