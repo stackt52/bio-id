@@ -3,9 +3,8 @@ package zm.gov.moh.enrolmentservice.service
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
+import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.client.FingerprintClient
 import zm.gov.moh.enrolmentservice.client.SearchClient
 import zm.gov.moh.enrolmentservice.controller.EnrolmentController
@@ -18,53 +17,44 @@ import java.util.*
 
 @Service
 class EnrolmentService(
-        @Autowired
-        private val searchClient: SearchClient,
-        @Autowired
-        private val fingerprintClient: FingerprintClient,
-        @Autowired
-        private val subjectRepository: SubjectRepository,
-        @Autowired
-        private val auxiliaryRepository: AuxiliaryRepository
+    @Autowired
+    private val searchClient: SearchClient,
+    @Autowired
+    private val fingerprintClient: FingerprintClient,
+    @Autowired
+    private val subjectRepository: SubjectRepository,
 ) {
 
     companion object {
         val logger = LoggerFactory.getLogger(EnrolmentController::class.java)
     }
 
-    @Transactional(rollbackOn = [Exception::class])
-    fun addSubject(subject: Subject): Subject {
-        var enrolledSubject = Subject()
+    @Transactional
+    fun addSubject(subject: Subject): Mono<Subject> {
         if (searchClient.search(subject.fingerprintData) == null) {
-            enrolledSubject = subjectRepository.save(subject)
-            val bioData = FingerprintDao(enrolledSubject.id!!, subject.fingerprintData!!)
-            fingerprintClient.create(bioData)
-                    .subscribe { result: Boolean? ->
-                        if (!result!!) {
+            return Mono.just(subjectRepository.save(subject))
+                .map { i -> FingerprintDao(i.id!!, subject.fingerprintData!!) }
+                .flatMap { i ->
+                    fingerprintClient.create(i).doOnNext { v ->
+                        if (v) {
                             throw Exception("Error creating biometric data")
                         }
                     }
+                }.flatMap { i -> Mono.just(subject) }
         } else {
             throw Exception("Client Fingerprints already enrolled")
         }
-        return enrolledSubject
     }
 
     fun findAll(): List<Subject> {
-        // Need for object reconstruction
-        return subjectRepository.findAll()
+        throw NotImplementedError()
     }
-
 
     fun findById(id: UUID): Subject {
         logger.info("Enrolment find: id={}", id)
         val subject = subjectRepository.getReferenceById(id)
         logger.info("Found: id={}", id)
-
-//            subject.bioFingerprints =
-//                searchClient.getById(id) //TODO: Change this to pull from the biometrics-data service
         return subject
-
     }
 
     fun updateById(subject: Subject): Subject {
@@ -72,17 +62,17 @@ class EnrolmentService(
         return subjectRepository.save(subject)
     }
 
-    @Transactional(rollbackOn = [Exception::class])
+    @Transactional
     fun deleteById(id: UUID) {
         subjectRepository.deleteById(id)
         fingerprintClient.delete(id)
-                .doOnError {
+            .doOnError {
+                throw Exception("Error deleting biometric data")
+            }
+            .subscribe { result: Boolean? ->
+                if (!result!!) {
                     throw Exception("Error deleting biometric data")
                 }
-                .subscribe { result: Boolean? ->
-                    if (!result!!) {
-                        throw Exception("Error deleting biometric data")
-                    }
-                }
+            }
     }
 }

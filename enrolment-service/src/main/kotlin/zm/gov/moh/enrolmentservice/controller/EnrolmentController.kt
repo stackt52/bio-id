@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.model.FingerprintDao
 import zm.gov.moh.enrolmentservice.model.Subject
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
@@ -18,7 +19,7 @@ class EnrolmentController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun add(@RequestBody subject: Subject): Subject {
+    fun add(@RequestBody subject: Subject): Mono<Subject> {
         try {
             subject.id = UUID.randomUUID()
             return enrolmentService.addSubject(subject)
