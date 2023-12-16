@@ -17,20 +17,14 @@ import java.util.*
 interface FingerprintClient {
 
     @PostExchange("/bio-data")
-    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean>
+    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<FingerprintDao>
 
     @GetExchange("/bio-data/{subjectId}")
-    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao>?
-
-    @GetExchange("/bio-data")
-    fun findAll(): Flux<FingerprintDao>
-
-    @GetExchange("/bio-data/src-system/{sourceSystemId}")
-    fun findBySrcSystemId(@PathVariable sourceSystemId: UUID): Flux<FingerprintData>?
+    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao>
 
     @PutExchange("/bio-data/{subjectId}")
-    fun update(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean>
+    fun update(@RequestBody fingerPrint: FingerprintDao): Mono<FingerprintDao>
 
     @DeleteExchange("/bio-data/{subjectId}")
-    fun delete(@PathVariable subjectId: UUID): Mono<Boolean>
+    fun delete(@PathVariable subjectId: UUID): Mono<FingerprintDao>
 }
