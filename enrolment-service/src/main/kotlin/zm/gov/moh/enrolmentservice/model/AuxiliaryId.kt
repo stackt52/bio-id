@@ -1,14 +1,9 @@
 package zm.gov.moh.enrolmentservice.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
+import org.springframework.data.relational.core.mapping.Table
 
-@Entity
+@Table(name = "auxiliary_id", schema = "client")
 data class AuxiliaryId(
-    @Id
-    val auxiliaryId: Long,
-    val type: String?,
-    val value: String?
-) {
-    constructor() : this(0, "", "")
-}
+        var type: String = "",
+        var value: String = ""
+)
