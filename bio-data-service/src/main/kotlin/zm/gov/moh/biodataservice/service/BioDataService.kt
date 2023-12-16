@@ -13,15 +13,15 @@ class BioDataService(
     @Autowired
     val repository: BioDataRepository
 ) {
-    fun add(data: FingerprintDao): Mono<Boolean> {
+    fun add(data: FingerprintDao): Mono<FingerprintDao> {
         return repository.save(data)
     }
 
-    fun update(data: FingerprintDao): Mono<Boolean> {
+    fun update(data: FingerprintDao): Mono<FingerprintDao> {
         return repository.save(data)
     }
 
-    fun get(subjectId: UUID): Mono<FingerprintDao>? {
+    fun get(subjectId: UUID): Mono<FingerprintDao> {
         return repository.findById(subjectId)
     }
 
@@ -29,7 +29,7 @@ class BioDataService(
         return repository.findAll()
     }
 
-    fun remove(subjectId: UUID): Mono<Boolean> {
+    fun remove(subjectId: UUID): Mono<FingerprintDao> {
         return repository.delete(subjectId)
     }
 }
