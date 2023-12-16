@@ -11,9 +11,9 @@ import java.util.UUID
 @AllArgsConstructor
 class FingerprintDao(
     var subjectId: UUID = UUID.randomUUID(),
-    var image: List<FingerprintData> = mutableListOf()
+    var data: List<FingerprintData> = mutableListOf()
 ) : Serializable {
     override fun toString(): String {
-        return "{subjectId: ${subjectId}, data: ${image}}"
+        return "{subjectId: ${subjectId}, data: ${data}}"
     }
 }
