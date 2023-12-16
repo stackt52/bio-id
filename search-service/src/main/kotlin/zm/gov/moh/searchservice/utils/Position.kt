@@ -1,4 +1,4 @@
-package zm.gov.moh.searchservice.util
+package zm.gov.moh.searchservice.utils
 
 enum class Position {
     RIGHT_THUMB,
