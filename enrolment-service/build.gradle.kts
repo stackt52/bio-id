@@ -45,27 +45,24 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	runtimeOnly("org.postgresql:postgresql")
-	implementation("com.zaxxer:HikariCP")
+	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+	implementation("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
 	compileOnly("org.projectlombok:lombok")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-openApiGenerate {
-	inputSpec.set("$rootDir/resources/openapi/api.yaml")
-	generatorName.set("kotlin-spring")
-	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
-	modelPackage.set("zm.gov.moh.enrolmentservice.model")
-	configOptions.set(mapOf(
-		"reactive" to "true",
-		"useSpringBoot3" to "true",
-		"delegatePattern" to "true"
-	))
-}
+//openApiGenerate {
+//	inputSpec.set("$rootDir/resources/openapi/api.yaml")
+//	generatorName.set("kotlin-spring")
+//	apiPackage.set("zm.gov.moh.enrolmentservice.controller")
+//	modelPackage.set("zm.gov.moh.enrolmentservice.model")
+//	configOptions.set(mapOf(
+//		"reactive" to "true",
+//		"useSpringBoot3" to "true",
+//		"delegatePattern" to "true"
+//	))
+//}
 
 dependencyManagement {
 	imports {

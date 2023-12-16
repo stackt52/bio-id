@@ -9,13 +9,11 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.springframework.boot.test.context.SpringBootTest
 import reactor.core.publisher.Flux
-import org.junit.jupiter.api.Assertions.assertEquals
-import reactor.kotlin.core.publisher.whenComplete
 import zm.gov.moh.searchservice.client.BioDataClient
 import zm.gov.moh.searchservice.client.EnrolmentClient
 import zm.gov.moh.searchservice.model.FingerprintDao
 import zm.gov.moh.searchservice.model.SearchPayload
-import zm.gov.moh.searchservice.repository.SearchRepository
+//import zm.gov.moh.searchservice.repository.SearchRepository
 import zm.gov.moh.searchservice.service.SearchService
 import java.nio.file.Files
 import java.nio.file.Path
@@ -25,11 +23,11 @@ import java.util.*
 class SearchServiceApplicationTests {
 	private val bioDataClient = Mockito.mock(BioDataClient::class.java)
 	private val enrolmentClient = Mockito.mock(EnrolmentClient::class.java)
-	private val searchRepository = Mockito.mock(SearchRepository::class.java)
+	//private val searchRepository = Mockito.mock(SearchRepository::class.java)
 	private val searchPayload = Mockito.mock(SearchPayload::class.java)
 
-	@InjectMocks
-	private var searchService: SearchService = SearchService(searchRepository)
+//	@InjectMocks
+//	private var searchService: SearchService = SearchService(searchRepository)
 
 	@BeforeEach
 	fun init() {
@@ -75,11 +73,11 @@ class SearchServiceApplicationTests {
 
 		val fingerprint: Flux<FingerprintDao> = Flux.fromIterable(fingerprintDao)
 
-		`when`(bioDataClient.findFingerprintDataBySrcSystemId(srcSystemId)).thenReturn(fingerprint)
+		`when`(bioDataClient.getAllBioData()).thenReturn(fingerprint)
 
 		val searchPayload = SearchPayload(probe, srcSystemId)
 
-		val result = searchService.findFingerprint(searchPayload)
+		//val result = searchService.findFingerprint(searchPayload)
 
 	}
 

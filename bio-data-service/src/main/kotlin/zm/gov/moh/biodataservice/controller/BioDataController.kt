@@ -28,32 +28,27 @@ class BioDataController(
     }
 
     @GetMapping("/{subjectId}")
-    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao>? {
+    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao> {
         return bioDataService.get(subjectId)
-    }
-
-    @GetMapping("/src-system/{sourceSystemId}")
-    fun findBySrcSystemId(@PathVariable sourceSystemId: UUID): Flux<FingerprintData>? {
-        return null
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean> {
+    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<FingerprintDao> {
         logger.info("Recording fingerprint data = {}", fingerPrint)
         return bioDataService.add(fingerPrint)
     }
 
     @PutMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@RequestBody fingerPrint: FingerprintDao): Mono<Boolean> {
+    fun update(@RequestBody fingerPrint: FingerprintDao): Mono<FingerprintDao> {
         logger.info("Updating fingerprint data ={}", fingerPrint)
         return bioDataService.update(fingerPrint)
     }
 
     @DeleteMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable subjectId: UUID): Mono<Boolean> {
+    fun delete(@PathVariable subjectId: UUID): Mono<FingerprintDao> {
         return bioDataService.remove(subjectId)
     }
 }

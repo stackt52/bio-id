@@ -1,24 +1,21 @@
 package zm.gov.moh.enrolmentservice.model
 
-import jakarta.persistence.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDate
 import java.util.UUID
 import kotlin.jvm.Transient
 
-@Entity
+@Table(name = "subject", schema = "client")
 data class Subject(
-    @Id
-    var id: UUID?,
-    val firstName: String?,
-    val lastName: String?,
-    val sex: Char?,
-    val dateOfBirth: LocalDate?,
-    val sourceSystemCode: String,
-    @Transient
-    var fingerprintData: MutableList<FingerprintData>?,
-    @OneToMany(targetEntity = AuxiliaryId::class, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "subject_id", referencedColumnName = "id")
-    var auxiliaryIds: MutableList<AuxiliaryId>?
-){
-    constructor() : this(UUID.randomUUID(), "", "",'M', LocalDate.now(), "", mutableListOf(),mutableListOf())
-}
+        @Id
+        var id: UUID = UUID.randomUUID(),
+        val firstName: String = "",
+        val lastName: String = "",
+        val sex: Char = 'M',
+        val dateOfBirth: LocalDate = LocalDate.of(1900, 1, 1),
+        val sourceSystemCode: String = "",
+        @Transient
+        var fingerprintData: MutableList<FingerprintData> = mutableListOf(),
+        var auxiliaryIds: MutableList<AuxiliaryId> = mutableListOf()
+) 
