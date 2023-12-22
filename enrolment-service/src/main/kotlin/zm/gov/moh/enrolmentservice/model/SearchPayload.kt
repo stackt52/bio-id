@@ -1,7 +1,5 @@
 package zm.gov.moh.enrolmentservice.model
 
-import java.util.*
-
 data class SearchPayload(
         val image: ByteArray,
         val sourceSystemId: String
