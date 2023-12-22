@@ -1,10 +1,10 @@
-package zm.gov.moh.searchservice.model
+package zm.gov.moh.enrolmentservice.model
 
-import java.util.UUID
+import java.util.*
 
 data class SearchPayload(
-    val image: ByteArray,
-    val sourceSystemId: String
+        val image: ByteArray,
+        val sourceSystemId: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -3,21 +3,24 @@ package zm.gov.moh.searchservice.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
+import zm.gov.moh.searchservice.client.BioDataClient
+import zm.gov.moh.searchservice.client.EnrolmentClient
 import zm.gov.moh.searchservice.dto.SearchDTO
 import zm.gov.moh.searchservice.model.FingerprintDao
 import zm.gov.moh.searchservice.model.SearchPayload
 import zm.gov.moh.searchservice.model.Subject
-import zm.gov.moh.searchservice.repository.SearchRepository
 import zm.gov.moh.searchservice.utils.Fingerprint
 import java.util.*
 
 @Service
 class SearchService(
-    @Autowired
-    private val searchRepository: SearchRepository
+        @Autowired
+        private val bioDataClient: BioDataClient,
+        @Autowired
+        private val enrolmentClient: EnrolmentClient
 ) {
     fun findSubject(subjectId: UUID): Mono<SearchDTO> {
-        val subject = searchRepository.findSubjectBySubjectId(subjectId)
+        val subject = enrolmentClient.findSubjectById(subjectId)
 
         val searchDTO = toSearchDTO(subject)
 
@@ -28,7 +31,7 @@ class SearchService(
         val probeData = searchPayload.image
         val srcSystemId = searchPayload.sourceSystemId
 
-        val fingerprint = searchRepository.findFingerprintBySrcSystemId(srcSystemId)
+        val fingerprint = bioDataClient.getAllBioData()
             .filter { fingerprintDao ->
                 fingerprintDao.data.any { Fingerprint.compareFingerprints(probeData, it.image) }
         }.next()
