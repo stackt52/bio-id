@@ -26,9 +26,8 @@ class SearchService(
 
     fun findFingerprint(searchPayload: SearchPayload): Mono<FingerprintDao> {
         val probeData = searchPayload.image
-        val srcSystemId = searchPayload.sourceSystemId
 
-        val fingerprint = searchRepository.findFingerprintBySrcSystemId(srcSystemId)
+        val fingerprint = searchRepository.findAllBioData()
             .filter { fingerprintDao ->
                 fingerprintDao.data.any { Fingerprint.compareFingerprints(probeData, it.image) }
         }.next()
