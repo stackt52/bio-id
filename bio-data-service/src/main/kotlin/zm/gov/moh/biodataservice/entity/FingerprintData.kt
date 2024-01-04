@@ -1,4 +1,4 @@
-package zm.gov.moh.biodataservice.model
+package zm.gov.moh.biodataservice.entity
 
 import zm.gov.moh.biodataservice.util.Position
 import java.io.Serializable

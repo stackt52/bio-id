@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import zm.gov.moh.biodataservice.model.FingerprintDao
+import zm.gov.moh.biodataservice.entity.Fingerprint
 import zm.gov.moh.biodataservice.repository.BioDataRepository
 import java.util.UUID
 
@@ -13,23 +13,23 @@ class BioDataService(
     @Autowired
     val repository: BioDataRepository
 ) {
-    fun add(data: FingerprintDao): Mono<FingerprintDao> {
+    fun add(data: Fingerprint): Mono<Fingerprint> {
         return repository.save(data)
     }
 
-    fun update(data: FingerprintDao): Mono<FingerprintDao> {
+    fun update(data: Fingerprint): Mono<Fingerprint> {
         return repository.save(data)
     }
 
-    fun get(subjectId: UUID): Mono<FingerprintDao> {
+    fun get(subjectId: UUID): Mono<Fingerprint> {
         return repository.findById(subjectId)
     }
 
-    fun getAll(): Flux<FingerprintDao> {
+    fun getAll(): Flux<Fingerprint> {
         return repository.findAll()
     }
 
-    fun remove(subjectId: UUID): Mono<FingerprintDao> {
+    fun remove(subjectId: UUID): Mono<Fingerprint> {
         return repository.delete(subjectId)
     }
 }

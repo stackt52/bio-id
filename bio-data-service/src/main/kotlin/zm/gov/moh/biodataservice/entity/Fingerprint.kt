@@ -1,4 +1,4 @@
-package zm.gov.moh.biodataservice.model
+package zm.gov.moh.biodataservice.entity
 
 import lombok.AllArgsConstructor
 import lombok.Data
@@ -9,7 +9,7 @@ import java.util.UUID
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class FingerprintDao(
+class Fingerprint(
     var subjectId: UUID = UUID.randomUUID(),
     var data: List<FingerprintData> = mutableListOf()
 ) : Serializable {

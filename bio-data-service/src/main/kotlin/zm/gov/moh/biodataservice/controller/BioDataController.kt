@@ -6,8 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import zm.gov.moh.biodataservice.model.FingerprintData
-import zm.gov.moh.biodataservice.model.FingerprintDao
+import zm.gov.moh.biodataservice.entity.Fingerprint
 import zm.gov.moh.biodataservice.service.BioDataService
 import java.util.UUID
 
@@ -23,32 +22,32 @@ class BioDataController(
     }
 
     @GetMapping
-    fun findAll(): Flux<FingerprintDao> {
+    fun findAll(): Flux<Fingerprint> {
         return bioDataService.getAll()
     }
 
     @GetMapping("/{subjectId}")
-    fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDao> {
+    fun findById(@PathVariable subjectId: UUID): Mono<Fingerprint> {
         return bioDataService.get(subjectId)
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody fingerPrint: FingerprintDao): Mono<FingerprintDao> {
+    fun create(@RequestBody fingerPrint: Fingerprint): Mono<Fingerprint> {
         logger.info("Recording fingerprint data = {}", fingerPrint)
         return bioDataService.add(fingerPrint)
     }
 
     @PutMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@RequestBody fingerPrint: FingerprintDao): Mono<FingerprintDao> {
+    fun update(@RequestBody fingerPrint: Fingerprint): Mono<Fingerprint> {
         logger.info("Updating fingerprint data ={}", fingerPrint)
         return bioDataService.update(fingerPrint)
     }
 
     @DeleteMapping("/{subjectId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable subjectId: UUID): Mono<FingerprintDao> {
+    fun delete(@PathVariable subjectId: UUID): Mono<Fingerprint> {
         return bioDataService.remove(subjectId)
     }
 }
