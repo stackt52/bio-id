@@ -4,7 +4,7 @@ import java.util.UUID
 
 data class SearchPayload(
     val image: ByteArray,
-    val sourceSystemId: UUID
+    val sourceSystemId: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
