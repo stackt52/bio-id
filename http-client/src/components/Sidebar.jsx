@@ -1,6 +1,5 @@
 import IconButton from "@mui/material/IconButton";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,6 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 import {styled, useTheme} from "@mui/material/styles";
 import {sidebarMenuList} from "../constants/SidebarMenuList";
+import {NavLink} from "react-router-dom";
 
 
 const DrawerHeader = styled('div')(({theme}) => ({
@@ -22,38 +22,41 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }));
 
 
-export default function Sidebar({onClose, open}) {
+export default function Sidebar({toggleOpen, open}) {
     const theme = useTheme();
 
     return (
         <>
             <DrawerHeader>
-                <IconButton onClick={onClose}>
-                    {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
+                <IconButton onClick={toggleOpen}
+                            sx={{transform: open ? 'rotate(180deg)' : 'rotate(0deg)'}}>
+                    <ChevronRightIcon/>
                 </IconButton>
             </DrawerHeader>
             <Divider/>
             <List>
                 {sidebarMenuList.map((value, index) => (
                     <ListItem key={value.id} disablePadding sx={{display: 'block'}}>
-                        <ListItemButton
-                            sx={{
-                                minHeight: 48,
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2.5,
-                            }}
-                        >
-                            <ListItemIcon
+                        <NavLink to={value.route}>
+                            <ListItemButton
                                 sx={{
-                                    minWidth: 0,
-                                    mr: open ? 3 : 'auto',
-                                    justifyContent: 'center',
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
                                 }}
                             >
-                                {value.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={value.label} sx={{opacity: open ? 1 : 0}}/>
-                        </ListItemButton>
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {value.icon}
+                                </ListItemIcon>
+                                <ListItemText primary={value.label} sx={{opacity: open ? 1 : 0}}/>
+                            </ListItemButton>
+                        </NavLink>
                     </ListItem>
                 ))}
             </List>

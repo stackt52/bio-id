@@ -6,14 +6,14 @@ export const sidebarMenuList = [
         id: 0,
         label: 'Home',
         icon: <HomeIcon/>,
-        route: '',
+        route: '/dashboard',
         children: []
     },
     {
         id: 1,
         label: 'Enrolment',
         icon: <Fingerprint/>,
-        route: '',
+        route: 'enrolment',
         children: [
             {
                 id: 0,
@@ -33,7 +33,7 @@ export const sidebarMenuList = [
         id: 2,
         label: 'Setting',
         icon: <Settings/>,
-        route: '',
+        route: 'settings',
         children: [
             {
                 id: 0,

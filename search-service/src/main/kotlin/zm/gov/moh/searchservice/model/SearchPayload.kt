@@ -1,7 +1,5 @@
 package zm.gov.moh.searchservice.model
 
-import java.util.UUID
-
 data class SearchPayload(
     val image: ByteArray,
     val sourceSystemId: String

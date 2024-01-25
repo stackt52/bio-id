@@ -1,6 +1,9 @@
 # NPVS Http Client
 
-An admin tool to manage the NPBVS backend microservices.
+An admin tool to manage the NPBVS backend microservices. It offers the following services:
+- Monitoring (Enrolments, running microservices) 
+- Enrolments management (Add, update, delete)
+- Biometrics search.
 
 ## Available Scripts
 
