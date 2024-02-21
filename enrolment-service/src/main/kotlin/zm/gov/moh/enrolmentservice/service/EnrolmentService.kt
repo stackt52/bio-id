@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.client.FingerprintClient
 import zm.gov.moh.enrolmentservice.client.SearchClient
 import zm.gov.moh.enrolmentservice.model.FingerprintDao
+import zm.gov.moh.enrolmentservice.model.SearchPayload
 import zm.gov.moh.enrolmentservice.model.Subject
 import java.util.*
 
@@ -27,7 +28,8 @@ class EnrolmentService(
     fun addSubject(subject: Subject): Mono<Subject> {
         // Before enrolling new client perform a search to determine if fingerprint data already exists.
         // only attempt registering new client when research returns Mono.empty().
-        return searchClient.search(subject.fingerprintData)
+        // Passing only the first image for searching this might change.
+        return searchClient.search(SearchPayload(subject.fingerprintData[0].image, subject.sourceSystemCode))
                 .hasElement()
                 .filter { i -> !i } // move to the next operator only if search returned empty
                 .flatMap { _ ->
