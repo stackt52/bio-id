@@ -2,5 +2,11 @@
 spring:
   application:
     name: enrolment-service
+  r2dbc:
+    password: postgres
+    username: postgres
+    url: r2dbc:postgresql://localhost:5432/enrolment
+    pool:
+      max-size: 80
   config:
     import: "optional:configserver:http://localhost:8088"

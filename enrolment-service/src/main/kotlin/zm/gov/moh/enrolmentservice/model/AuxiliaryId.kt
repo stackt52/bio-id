@@ -1,9 +1,9 @@
 package zm.gov.moh.enrolmentservice.model
 
-import java.util.UUID
+import org.springframework.data.relational.core.mapping.Table
 
+@Table(name = "auxiliary_id", schema = "client")
 data class AuxiliaryId(
-    val subjectId: UUID,
-    val type: String,
-    val value: String
+        var type: String = "",
+        var value: String = ""
 )
