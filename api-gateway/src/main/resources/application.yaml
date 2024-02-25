@@ -9,7 +9,7 @@ spring:
         - id: enrolment-service
           uri: lb://enrolment-service
           predicates:
-            - Path=/enrolments/**
+            - Path=/enrolments/**, /v3/api-docs/enrolment
         - id: enrolment-service-post
           uri: lb://enrolment-service
           predicates:
@@ -22,7 +22,7 @@ spring:
         - id: search-service
           uri: lb://search-service
           predicates:
-            - Path=/search/**
+            - Path=/search/** , /v3/api-docs/search
   main:
     allow-bean-definition-overriding: true
   security:
