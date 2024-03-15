@@ -14,6 +14,7 @@ class FingerprintDao(
     var data: List<FingerprintData> = mutableListOf(),
     var srcSystemId: String = ""
 ) : Serializable {
+    //
     override fun toString(): String {
         return "{subjectId: ${subjectId}, data: ${data}, srcSystemId: ${srcSystemId}}"
     }
