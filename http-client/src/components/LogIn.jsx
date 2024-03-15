@@ -29,7 +29,11 @@ export default function LogIn() {
                 }}/>
             <TextField
                 sx={{my: 1}}
+                id="password"
                 label="Password"
+                placeholder="Type your password"
+                required={true}
+                type="password"
                 variant="filled"
                 InputProps={{
                     startAdornment: (

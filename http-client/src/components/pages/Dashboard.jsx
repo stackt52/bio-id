@@ -9,9 +9,7 @@ import Typography from '@mui/material/Typography';
 import Sidebar from "../Sidebar";
 import IconButton from "@mui/material/IconButton";
 import {Notifications, Person} from "@mui/icons-material";
-import {Outlet, Route, Routes} from "react-router-dom";
-import Welcome from "./Welcome";
-import SignIn from "./SignIn";
+import {Outlet} from "react-router-dom";
 import {Container} from "@mui/material";
 
 
