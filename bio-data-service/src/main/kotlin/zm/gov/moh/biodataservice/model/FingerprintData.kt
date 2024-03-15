@@ -3,6 +3,7 @@ package zm.gov.moh.biodataservice.model
 import zm.gov.moh.biodataservice.util.Position
 import java.io.Serializable
 
+//
 data class FingerprintData(
     var pos: Position = Position.RIGHT_INDEX,
     var image: ByteArray = ByteArray(0)
