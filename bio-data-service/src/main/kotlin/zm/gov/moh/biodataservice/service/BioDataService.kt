@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.biodataservice.entity.Fingerprint
+import zm.gov.moh.biodataservice.entity.FingerprintData
+import zm.gov.moh.biodataservice.model.FingerprintDTO
+import zm.gov.moh.biodataservice.model.FingerprintDataDTO
 import zm.gov.moh.biodataservice.repository.BioDataRepository
 import java.util.UUID
 
@@ -13,23 +16,51 @@ class BioDataService(
     @Autowired
     val repository: BioDataRepository
 ) {
-    fun add(data: Fingerprint): Mono<Fingerprint> {
-        return repository.save(data)
+    fun add(data: FingerprintDTO): Mono<FingerprintDTO> {
+        return repository.save(
+            Fingerprint(
+                data.subjectId,
+                data.data.map { d -> FingerprintData(d.position, d.fingerPrintTemplate) })
+        ).map { f ->
+            FingerprintDTO(
+                f.subjectId,
+                f.data.map { d -> FingerprintDataDTO(d.pos, d.fingerPrintTemplate) })
+        }
     }
 
-    fun update(data: Fingerprint): Mono<Fingerprint> {
-        return repository.save(data)
+    fun update(data: FingerprintDTO): Mono<FingerprintDTO> {
+        return repository.save(
+            Fingerprint(
+                data.subjectId,
+                data.data.map { d -> FingerprintData(d.position, d.fingerPrintTemplate) })
+        ).map { f ->
+            FingerprintDTO(
+                f.subjectId,
+                f.data.map { d -> FingerprintDataDTO(d.pos, d.fingerPrintTemplate) })
+        }
     }
 
-    fun get(subjectId: UUID): Mono<Fingerprint> {
-        return repository.findById(subjectId)
+    fun get(subjectId: UUID): Mono<FingerprintDTO> {
+        return repository.findById(subjectId).map { f ->
+            FingerprintDTO(
+                f.subjectId,
+                f.data.map { d -> FingerprintDataDTO(d.pos, d.fingerPrintTemplate) })
+        }
     }
 
-    fun getAll(): Flux<Fingerprint> {
-        return repository.findAll()
+    fun getAll(): Flux<FingerprintDTO> {
+        return repository.findAll().map { f ->
+            FingerprintDTO(
+                f.subjectId,
+                f.data.map { d -> FingerprintDataDTO(d.pos, d.fingerPrintTemplate) })
+        }
     }
 
-    fun remove(subjectId: UUID): Mono<Fingerprint> {
-        return repository.delete(subjectId)
+    fun remove(subjectId: UUID): Mono<FingerprintDTO> {
+        return repository.delete(subjectId).map { f ->
+            FingerprintDTO(
+                f.subjectId,
+                f.data.map { d -> FingerprintDataDTO(d.pos, d.fingerPrintTemplate) })
+        }
     }
 }
