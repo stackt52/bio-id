@@ -1,7 +1,9 @@
-package zm.gov.moh.enrolmentservice.model
+package zm.gov.moh.enrolmentservice.entity
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
+import zm.gov.moh.enrolmentservice.util.Constants
+import zm.gov.moh.enrolmentservice.util.Sex
 import java.time.LocalDate
 import java.util.UUID
 import kotlin.jvm.Transient
@@ -12,9 +14,9 @@ data class Subject(
         var id: UUID = UUID.randomUUID(),
         val firstName: String = "",
         val lastName: String = "",
-        val sex: Char = 'M',
-        val dateOfBirth: LocalDate = LocalDate.of(1900, 1, 1),
-        val sourceSystemCode: String = "",
+        val sex: Sex = Sex.M,
+        val dateOfBirth: LocalDate = Constants.NULL_DATE,
+        val sourceSystemId: UUID? = null,
         @Transient
         var fingerprintData: MutableList<FingerprintData> = mutableListOf(),
         var auxiliaryIds: MutableList<AuxiliaryId> = mutableListOf()

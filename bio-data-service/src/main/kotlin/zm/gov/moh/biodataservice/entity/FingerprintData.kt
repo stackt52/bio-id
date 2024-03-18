@@ -3,10 +3,9 @@ package zm.gov.moh.biodataservice.entity
 import zm.gov.moh.biodataservice.util.Position
 import java.io.Serializable
 
-//
 data class FingerprintData(
     var pos: Position = Position.RIGHT_INDEX,
-    var image: ByteArray = ByteArray(0)
+    var fingerPrintTemplate: ByteArray = ByteArray(0)
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -15,19 +14,19 @@ data class FingerprintData(
         other as FingerprintData
 
         if (pos != other.pos) return false
-        if (!image.contentEquals(other.image)) return false
+        if (!fingerPrintTemplate.contentEquals(other.fingerPrintTemplate)) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = pos.hashCode()
-        result = 31 * result + image.contentHashCode()
+        result = 31 * result + fingerPrintTemplate.contentHashCode()
         return result
     }
 
     override fun toString(): String {
-        return "{pos: ${pos}, image: ${image}}"
+        return "{pos: ${pos}, fingerPrintTemplate: ${fingerPrintTemplate}}"
     }
 
 }

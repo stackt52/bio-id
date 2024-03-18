@@ -13,7 +13,6 @@ class Fingerprint(
     var subjectId: UUID = UUID.randomUUID(),
     var data: List<FingerprintData> = mutableListOf()
 ) : Serializable {
-    //
     override fun toString(): String {
         return "{subjectId: ${subjectId}, data: ${data}}"
     }

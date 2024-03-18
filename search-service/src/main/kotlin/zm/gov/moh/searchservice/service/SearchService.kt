@@ -1,54 +1,56 @@
 package zm.gov.moh.searchservice.service
 
+import com.machinezoo.sourceafis.FingerprintMatcher
+import com.machinezoo.sourceafis.FingerprintTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 import zm.gov.moh.searchservice.client.BioDataClient
 import zm.gov.moh.searchservice.client.EnrolmentClient
-import zm.gov.moh.searchservice.dto.SearchDTO
-import zm.gov.moh.searchservice.model.FingerprintDao
-import zm.gov.moh.searchservice.model.SearchPayload
-import zm.gov.moh.searchservice.model.Subject
-import zm.gov.moh.searchservice.utils.Fingerprint
-import java.util.*
+import zm.gov.moh.searchservice.model.*
 
 @Service
 class SearchService(
-        @Autowired
-        private val bioDataClient: BioDataClient,
-        @Autowired
-        private val enrolmentClient: EnrolmentClient
+    @Autowired
+    private val bioDataClient: BioDataClient,
+    @Autowired
+    private val enrolmentClient: EnrolmentClient
 ) {
-    fun findSubject(subjectId: UUID): Mono<SearchDTO> {
-        val subject = enrolmentClient.findSubjectById(subjectId)
 
-        val searchDTO = toSearchDTO(subject)
-
-        return Mono.just(searchDTO)
+    fun identifyAny(searchPayload: List<SearchDTO>): Mono<MatchScore> {
+        // we could run search in parallel but its really pointless considering that we are running it on async streams
+        return Flux.fromIterable(searchPayload)
+            .flatMap { i -> identify(i) }
+            .take(1)
+            .toMono()
     }
 
-    fun findFingerprint(searchPayload: SearchPayload): Mono<FingerprintDao> {
-        val probeData = searchPayload.image
-        val srcSystemId = searchPayload.sourceSystemId
+    fun identify(searchPayload: FingerprintImageDTO): Mono<SubjectDTO> {
+        val probeTemplate = FingerprintTemplate(searchPayload.image)
+        val payload = SearchDTO(probeTemplate.toByteArray(), "")
 
-        val fingerprint = bioDataClient.getAllBioData()
-            .filter { fingerprintDao ->
-                fingerprintDao.data.any { Fingerprint.compareFingerprints(probeData, it.image) }
-        }.next()
-
-        return fingerprint
+        return identify(payload)
+            .flatMap { i -> enrolmentClient.findById(i.subjectId) }
     }
 
-    private fun toSearchDTO(subject: Subject): SearchDTO {
-       val searchDTO = SearchDTO()
+    private fun identify(searchPayload: SearchDTO): Mono<MatchScore> {
+        val threshold = 40.0
+        val matcher = FingerprintMatcher(FingerprintTemplate(searchPayload.fingerPrintTemplate))
 
-        searchDTO.id = subject.id
-        searchDTO.firstName = subject.firstName
-        searchDTO.lastName = subject.lastName
-        searchDTO.sex = subject.sex
-        searchDTO.dateOfBirth = subject.dateOfBirth
-        searchDTO.auxiliaryIds = searchDTO.auxiliaryIds
-
-        return searchDTO
+        return bioDataClient.findAll().flatMap { i ->
+            Flux.fromIterable(
+                i.data.map { d ->
+                    SubjectFingerPrintDTO(
+                        i.subjectId,
+                        FingerprintTemplate(d.fingerPrintTemplate),
+                        d.position
+                    )
+                }
+            )
+        }.map { i -> MatchScore(i.subjectId, matcher.match(i.fingerprintTemplate)) }
+            .filter { i -> i.score >= threshold }
+            .singleOrEmpty()
     }
 }

@@ -1,4 +1,4 @@
-package zm.gov.moh.searchservice.utils
+package zm.gov.moh.searchservice.util
 
 import com.machinezoo.sourceafis.FingerprintImage
 import com.machinezoo.sourceafis.FingerprintMatcher

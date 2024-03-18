@@ -32,7 +32,6 @@ class R2dbcConfig(
 
     @Bean
     override fun connectionFactory(): ConnectionFactory {
-
         val ob = ConnectionFactoryBuilder.withUrl(properties.url)
         val op = ob.buildOptions()
                 .mutate()

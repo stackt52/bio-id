@@ -1,4 +1,4 @@
-package zm.gov.moh.enrolmentservice.model
+package zm.gov.moh.enrolmentservice.entity
 
 import org.springframework.data.relational.core.mapping.Table
 

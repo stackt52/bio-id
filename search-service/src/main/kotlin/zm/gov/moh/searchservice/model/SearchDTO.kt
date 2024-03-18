@@ -1,23 +1,23 @@
 package zm.gov.moh.searchservice.model
 
-data class SearchPayload(
-    val image: ByteArray,
+data class SearchDTO(
+    val fingerPrintTemplate: ByteArray,
     val sourceSystemId: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as SearchPayload
+        other as SearchDTO
 
-        if (!image.contentEquals(other.image)) return false
+        if (!fingerPrintTemplate.contentEquals(other.fingerPrintTemplate)) return false
         if (sourceSystemId != other.sourceSystemId) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = image.contentHashCode()
+        var result = fingerPrintTemplate.contentHashCode()
         result = 31 * result + sourceSystemId.hashCode()
         return result
     }

@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
-import zm.gov.moh.searchservice.client.EnrolmentClient
 import zm.gov.moh.searchservice.client.BioDataClient
+import zm.gov.moh.searchservice.client.EnrolmentClient
 
 @Configuration
 class WebClientConfig(
@@ -42,10 +42,10 @@ class WebClientConfig(
 
     @Bean
     fun enrolmentClient(): EnrolmentClient {
-        val httpServiceProxyFactory = HttpServiceProxyFactory
+        val httpServiceProxyFunction = HttpServiceProxyFactory
             .builder(WebClientAdapter.forClient(enrolmentWebClient()))
             .build()
 
-        return httpServiceProxyFactory.createClient(EnrolmentClient::class.java)
+        return httpServiceProxyFunction.createClient(EnrolmentClient::class.java)
     }
 }
