@@ -1,7 +1,7 @@
-package zm.gov.moh.searchservice.model
+package zm.gov.moh.biodataservice.model
 
-import zm.gov.moh.searchservice.util.Constants
-import zm.gov.moh.searchservice.util.Position
+import zm.gov.moh.biodataservice.util.Constants
+import zm.gov.moh.biodataservice.util.Position
 import java.util.UUID
 
 data class FingerprintImageDTO(
