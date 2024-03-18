@@ -3,18 +3,14 @@ package zm.gov.moh.searchservice
 import com.machinezoo.sourceafis.FingerprintTemplate
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.InjectMocks
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.springframework.boot.test.context.SpringBootTest
 import reactor.core.publisher.Flux
 import zm.gov.moh.searchservice.client.BioDataClient
-import zm.gov.moh.searchservice.client.EnrolmentClient
-import zm.gov.moh.searchservice.model.FingerprintDao
-import zm.gov.moh.searchservice.model.SearchPayload
+import zm.gov.moh.searchservice.model.SearchDTO
 //import zm.gov.moh.searchservice.repository.SearchRepository
-import zm.gov.moh.searchservice.service.SearchService
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -24,7 +20,7 @@ class SearchServiceApplicationTests {
 	private val bioDataClient = Mockito.mock(BioDataClient::class.java)
 	private val enrolmentClient = Mockito.mock(EnrolmentClient::class.java)
 	//private val searchRepository = Mockito.mock(SearchRepository::class.java)
-	private val searchPayload = Mockito.mock(SearchPayload::class.java)
+	private val searchPayload = Mockito.mock(SearchDTO::class.java)
 
 //	@InjectMocks
 //	private var searchService: SearchService = SearchService(searchRepository)
@@ -75,7 +71,7 @@ class SearchServiceApplicationTests {
 
 		`when`(bioDataClient.getAllBioData()).thenReturn(fingerprint)
 
-		val searchPayload = SearchPayload(probe, srcSystemId)
+		val searchPayload = SearchDTO(probe, srcSystemId)
 
 		//val result = searchService.findFingerprint(searchPayload)
 
