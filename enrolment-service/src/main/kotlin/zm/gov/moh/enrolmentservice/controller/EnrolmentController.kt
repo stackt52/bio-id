@@ -9,7 +9,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import zm.gov.moh.enrolmentservice.model.SubjectDTO
+import zm.gov.moh.enrolmentservice.model.ClientDTO
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
 import java.util.UUID
 
@@ -29,13 +29,13 @@ class EnrolmentController(
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(
         value = "Register a client",
-        response = SubjectDTO::class
+        response = ClientDTO::class
     )
-    suspend fun add(@RequestBody subject: SubjectDTO): SubjectDTO {
+    suspend fun add(@RequestBody subject: ClientDTO): ClientDTO {
         try {
             return enrolmentService.addSubject(subject)
         } catch (e: Exception) {
-            logger.error("Error occurred when enrolling subject: {}", e.stackTrace)
+            logger.error("Error occurred when enrolling client: {}", e.stackTrace)
             throw Throwable(e.message, e.cause)
         }
     }
@@ -43,10 +43,10 @@ class EnrolmentController(
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     @ApiOperation(
         value = "Retrieve all clients",
-        response = SubjectDTO::class,
+        response = ClientDTO::class,
         responseContainer = "List"
     )
-    fun findAll(): Flux<SubjectDTO> {
+    fun findAll(): Flux<ClientDTO> {
         try {
             return enrolmentService.findAll()
         } catch (e: Exception) {
@@ -58,9 +58,9 @@ class EnrolmentController(
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ApiOperation(
         value = "Find a client by id",
-        response = SubjectDTO::class
+        response = ClientDTO::class
     )
-    fun findById(@PathVariable id: UUID): Mono<SubjectDTO> {
+    fun findById(@PathVariable id: UUID): Mono<ClientDTO> {
         try {
             return enrolmentService.findById(id)
         } catch (e: Exception) {
@@ -73,9 +73,9 @@ class EnrolmentController(
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(
         value = "Update a client's enrolment information",
-        response = SubjectDTO::class
+        response = ClientDTO::class
     )
-    fun updateById(@PathVariable id: UUID, @RequestBody subject: SubjectDTO): Mono<SubjectDTO> {
+    fun updateById(@PathVariable id: UUID, @RequestBody subject: ClientDTO): Mono<ClientDTO> {
         try {
             subject.id = id
             return enrolmentService.updateById(subject)
@@ -89,9 +89,9 @@ class EnrolmentController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(
         value = "Delete a client",
-        response = SubjectDTO::class
+        response = ClientDTO::class
     )
-    fun deleteById(@PathVariable id: String): Mono<SubjectDTO> {
+    fun deleteById(@PathVariable id: String): Mono<ClientDTO> {
         try {
             return enrolmentService.deleteById(UUID.fromString(id))
         } catch (e: Exception) {

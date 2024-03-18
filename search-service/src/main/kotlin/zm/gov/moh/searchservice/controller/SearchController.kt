@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 import zm.gov.moh.searchservice.model.FingerprintImageDTO
 import zm.gov.moh.searchservice.model.MatchScore
-import zm.gov.moh.searchservice.model.SearchDTO
-import zm.gov.moh.searchservice.model.SubjectDTO
 import zm.gov.moh.searchservice.service.SearchService
 
 @RestController
@@ -29,9 +27,9 @@ class SearchController(
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(
         value = "Find a client using a given fingerprint image",
-        response = SubjectDTO::class
+        response = MatchScore::class
     )
-    fun search(@RequestBody searchPayload: FingerprintImageDTO): Mono<SubjectDTO> {
+    fun search(@RequestBody searchPayload: FingerprintImageDTO): Mono<MatchScore> {
         logger.info("Search payload: {}", searchPayload)
         return searchService.identify(searchPayload)
     }
@@ -42,7 +40,7 @@ class SearchController(
         value = "Find a client using a given collection of fingerprint templates",
         response = MatchScore::class
     )
-    fun searchAny(@RequestBody searchPayload: List<SearchDTO>): Mono<MatchScore> {
+    fun searchAny(@RequestBody searchPayload: List<FingerprintImageDTO>): Mono<MatchScore> {
         logger.info("Search payloads: {}", searchPayload)
         return searchService.identifyAny(searchPayload)
     }

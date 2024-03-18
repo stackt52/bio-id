@@ -1,7 +1,7 @@
-package zm.gov.moh.searchservice.model
+package zm.gov.moh.enrolmentservice.model
 
-import zm.gov.moh.searchservice.util.Constants
-import zm.gov.moh.searchservice.util.Position
+import zm.gov.moh.enrolmentservice.util.Constants
+import zm.gov.moh.enrolmentservice.util.Position
 import java.util.UUID
 
 data class FingerprintImageDTO(

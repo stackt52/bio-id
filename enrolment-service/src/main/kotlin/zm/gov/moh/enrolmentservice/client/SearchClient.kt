@@ -4,14 +4,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
 import reactor.core.publisher.Mono
+import zm.gov.moh.enrolmentservice.model.FingerprintImageDTO
 import zm.gov.moh.enrolmentservice.model.MatchScore
-import zm.gov.moh.enrolmentservice.model.SearchDTO
 
 @HttpExchange
 interface SearchClient {
     @PostExchange("/search")
-    fun search(@RequestBody searchPayload: SearchDTO): Mono<MatchScore>
+    fun search(@RequestBody searchPayload: FingerprintImageDTO): Mono<MatchScore>
 
     @PostExchange("/search/any")
-    fun searchAny(@RequestBody searchPayload: List<SearchDTO>): Mono<MatchScore>
+    fun searchAny(@RequestBody searchPayload: List<FingerprintImageDTO>): Mono<MatchScore>
 }

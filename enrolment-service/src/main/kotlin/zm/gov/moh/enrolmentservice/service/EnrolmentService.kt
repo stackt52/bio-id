@@ -16,7 +16,6 @@ import zm.gov.moh.enrolmentservice.entity.Subject
 import zm.gov.moh.enrolmentservice.model.*
 import java.util.*
 
-
 @Service
 class EnrolmentService(
     @Autowired
@@ -26,29 +25,37 @@ class EnrolmentService(
     @Autowired
     private val template: R2dbcEntityTemplate,
 ) {
-    suspend fun addSubject(subject: SubjectDTO): SubjectDTO {
-        subject.id = UUID.randomUUID()
-        val searchPayloads = subject.fingerprintData.map { i -> SearchDTO(i.fingerPrintTemplate, null) }
+    suspend fun addSubject(client: ClientDTO): ClientDTO {
+        val clientId = UUID.randomUUID()
         val matchScore =
-            searchClient.searchAny(searchPayloads).awaitSingleOrNull()
+            searchClient.searchAny(client.fingerprintImages).awaitSingleOrNull()
+
+        val subject = with(client) {
+            Subject(
+                id = clientId,
+                firstName,
+                lastName,
+                sex,
+                dateOfBirth
+            )
+        }
 
         return if (matchScore == null) {
             template.insert(subject)
                 .flatMap { i ->
+                    client.fingerprintImages.forEach { v -> v.clientId = i.id }
                     bioDataClient.create(
-                        FingerprintDTO(
-                            i.id!!,
-                            i.fingerprintData.map { d -> FingerprintDataDTO(d.position, d.fingerPrintTemplate) })
+                        client.fingerprintImages
                     )
                 }.flatMap { _ ->
-                    subject.newClient = true
-                    Mono.just(subject)
+                    client.newClient = true
+                    Mono.just(client)
                 }.awaitSingle()
 
         } else {
-            val client = findById(matchScore.subjectId).awaitSingle()
-            val (id, firstName, lastName, sex, dateOfBirth) = client
-            SubjectDTO(
+            val v = findById(matchScore.subjectId).awaitSingle()
+            val (id, firstName, lastName, sex, dateOfBirth) = v
+            ClientDTO(
                 id,
                 firstName,
                 lastName,
@@ -59,9 +66,9 @@ class EnrolmentService(
         }
     }
 
-    fun findAll(): Flux<SubjectDTO> {
+    fun findAll(): Flux<ClientDTO> {
         return template.select<Subject>().all().map { i ->
-            SubjectDTO(
+            ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
                 lastName = i.lastName,
@@ -71,9 +78,9 @@ class EnrolmentService(
         }
     }
 
-    fun findById(id: UUID): Mono<SubjectDTO> {
+    fun findById(id: UUID): Mono<ClientDTO> {
         return template.selectOne(query(where("id").`is`(id)), Subject::class.java).map { i ->
-            SubjectDTO(
+            ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
                 lastName = i.lastName,
@@ -83,11 +90,11 @@ class EnrolmentService(
         }
     }
 
-    fun updateById(subject: SubjectDTO): Mono<SubjectDTO> {
+    fun updateById(subject: ClientDTO): Mono<ClientDTO> {
         // TODO: update also subject's auxiliaryIds, and bioData fingerprints
         val (id, firstName, lastName, sex, dateOfBirth) = subject
-        return template.update(SubjectDTO(id, firstName, lastName, sex, dateOfBirth)).map { i ->
-            SubjectDTO(
+        return template.update(ClientDTO(id, firstName, lastName, sex, dateOfBirth)).map { i ->
+            ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
                 lastName = i.lastName,
@@ -97,9 +104,9 @@ class EnrolmentService(
         }
     }
 
-    fun deleteById(id: UUID): Mono<SubjectDTO> {
+    fun deleteById(id: UUID): Mono<ClientDTO> {
         return findById(id).flatMap { i -> template.delete(i) }.map { i ->
-            SubjectDTO(
+            ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
                 lastName = i.lastName,

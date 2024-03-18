@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.biodataservice.model.FingerprintDTO
+import zm.gov.moh.biodataservice.model.FingerprintImageDTO
 import zm.gov.moh.biodataservice.service.BioDataService
 import java.util.UUID
 
@@ -29,7 +30,7 @@ class BioDataController(
     @ApiOperation(
         value = "Retrieve all the fingerprint data",
         response = FingerprintDTO::class,
-        responseContainer = "List"
+        responseContainer = "Flux"
     )
     fun findAll(): Flux<FingerprintDTO> {
         return bioDataService.getAll()
@@ -38,7 +39,8 @@ class BioDataController(
     @GetMapping("/{subjectId}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ApiOperation(
         value = "Retrieve the fingerprint data for a single client using id",
-        response = FingerprintDTO::class
+        response = FingerprintDTO::class,
+        responseContainer = "Mono"
     )
     fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDTO> {
         return bioDataService.get(subjectId)
@@ -48,18 +50,20 @@ class BioDataController(
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(
         value = "Add a client's fingerprint data",
-        response = FingerprintDTO::class
+        response = FingerprintDTO::class,
+        responseContainer = "Mono"
     )
-    fun create(@RequestBody fingerPrint: FingerprintDTO): Mono<FingerprintDTO> {
-        logger.info("Recording fingerprint data = {}", fingerPrint)
-        return bioDataService.add(fingerPrint)
+    fun create(@RequestBody fingerPrints: List<FingerprintImageDTO>): Mono<FingerprintDTO> {
+        logger.info("Recording fingerprint data = {}", fingerPrints)
+        return bioDataService.add(fingerPrints)
     }
 
     @PutMapping("/{subjectId}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(
         value = "Update a client's fingerprint data information",
-        response = FingerprintDTO::class
+        response = FingerprintDTO::class,
+        responseContainer = "Mono"
     )
     fun update(@RequestBody fingerPrint: FingerprintDTO): Mono<FingerprintDTO> {
         logger.info("Updating fingerprint data ={}", fingerPrint)
@@ -70,7 +74,8 @@ class BioDataController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(
         value = "Delete a client's fingerprint data",
-        response = FingerprintDTO::class
+        response = FingerprintDTO::class,
+        responseContainer = "Mono"
     )
     fun delete(@PathVariable subjectId: UUID): Mono<FingerprintDTO> {
         return bioDataService.remove(subjectId)
