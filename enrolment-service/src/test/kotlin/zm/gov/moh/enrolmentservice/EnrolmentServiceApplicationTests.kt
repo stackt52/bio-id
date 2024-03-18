@@ -1,21 +1,12 @@
 package zm.gov.moh.enrolmentservice
 
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.InjectMocks
 import org.mockito.Mockito
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import org.springframework.boot.test.context.SpringBootTest
-import zm.gov.moh.enrolmentservice.model.Subject
 import zm.gov.moh.enrolmentservice.repository.SubjectRepository
-import zm.gov.moh.enrolmentservice.service.EnrolmentService
-import java.time.LocalDate
-import java.util.*
 
 
 @SpringBootTest
