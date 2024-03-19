@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import zm.gov.moh.searchservice.client.BioDataClient
 import zm.gov.moh.searchservice.model.*
+import java.lang.IllegalArgumentException
 
 @Service
 class SearchService(
@@ -29,9 +30,9 @@ class SearchService(
     }
 
     fun identify(fingerprintImage: FingerprintImageDTO): Mono<MatchScore> {
-        val threshold = 40.0
         val fImage = FingerprintImage(fingerprintImage.image)
-        val fTemplate = FingerprintTemplate(fImage)
+        val fTemplate = toFingerprintTemplate(fImage)
+
         val matcher = FingerprintMatcher(fTemplate) // this is an expensive operation
 
         return bioDataClient.findAll().flatMap { i ->
@@ -45,7 +46,19 @@ class SearchService(
                 }
             )
         }.map { i -> MatchScore(i.subjectId, matcher.match(i.fingerprintTemplate)) }
-            .filter { i -> i.score >= threshold }
+            .filter { i -> i.score >= FINGERPRINT_SIMILARITY_THRESHOLD }
             .singleOrEmpty()
+    }
+
+    private fun toFingerprintTemplate(source: Any): FingerprintTemplate {
+       return when(source) {
+           is FingerprintImage -> FingerprintTemplate(source)
+           else -> throw IllegalArgumentException("unsupported source type for fingerprint")
+       }
+    }
+
+    companion object {
+        // according to sourceAFIS docs 40 corresponds to false match rate 0.01% which is good starting point
+        private const val FINGERPRINT_SIMILARITY_THRESHOLD = 40.0
     }
 }
