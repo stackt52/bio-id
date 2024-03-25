@@ -30,9 +30,12 @@ class EnrolmentService(
     suspend fun addSubject(enrolmentDTO: EnrolmentDTO): ClientDTO {
         val clientId = UUID.randomUUID()
         val fingerprintImages = fingerprintImages(enrolmentDTO)
+
         if (fingerprintImages.isEmpty())
             throw MissingRequestValueException("No valid fingerprint image found.")
+
         fingerprintImages.forEach { v -> v.clientId = clientId }
+
         val matchScore =
             searchClient.searchAny(fingerprintImages).awaitSingleOrNull()
 

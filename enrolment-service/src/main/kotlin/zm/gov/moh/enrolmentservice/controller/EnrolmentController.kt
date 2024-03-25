@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MissingRequestValueException
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
@@ -14,28 +13,25 @@ import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.model.ClientDTO
 import zm.gov.moh.enrolmentservice.model.EnrolmentDTO
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
-import java.util.UUID
+import java.util.*
 
 @RestController
 @RequestMapping("/enrolments")
 @Api(tags = ["Enrolment"], description = "Enrolment endpoint")
 class EnrolmentController(
-        @Autowired
-        private val enrolmentService: EnrolmentService
+    @Autowired
+    private val enrolmentService: EnrolmentService
 ) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(EnrolmentController::class.java)
 
-        @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Illegal arguments")
+        @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "No valid fingerprint image found")
         @ExceptionHandler(
             MissingRequestValueException::class
         )
-        private fun missingFingerprintHandler() {}
-
-        @ExceptionHandler(MissingRequestValueException::class)
-        fun missingFingerprintHandler(exception: MissingRequestValueException): ResponseEntity<String> {
-            return ResponseEntity.badRequest().build()
+        private fun missingFingerprintsHandler(msg: String): Nothing {
+            throw MissingRequestValueException(msg)
         }
     }
 
@@ -52,8 +48,8 @@ class EnrolmentController(
         try {
             return enrolmentService.addSubject(subjectDetails)
         } catch (e: MissingRequestValueException) {
-            logger.error("Error occurred when enrolling client: {}", e.stackTrace)
-            throw Throwable(e.message, e.cause)
+            logger.error("Error occurred when enrolling client: {}", e.message)
+            missingFingerprintsHandler(e.message!!)
         }
     }
 

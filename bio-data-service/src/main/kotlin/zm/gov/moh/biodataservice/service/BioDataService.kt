@@ -43,7 +43,7 @@ class BioDataService(
         return repository.save(
             Fingerprint(
                 data.subjectId,
-                data.data.map { d -> FingerprintData(d.position, d.fingerPrintTemplate) })
+                data.data.map { d -> FingerprintData(d.position, d.serializedFingerprintTemplate) })
         ).map { f ->
             FingerprintDTO(
                 f.subjectId,
