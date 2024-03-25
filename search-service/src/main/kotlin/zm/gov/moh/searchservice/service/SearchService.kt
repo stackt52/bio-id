@@ -29,7 +29,7 @@ class SearchService(
     }
 
     fun identify(fingerprintImage: FingerprintImageDTO): Mono<MatchScore> {
-        val threshold = 40.0
+        val threshold = 120.0
         val fImage = FingerprintImage(fingerprintImage.image)
         val fTemplate = FingerprintTemplate(fImage)
         val matcher = FingerprintMatcher(fTemplate) // this is an expensive operation
@@ -39,7 +39,7 @@ class SearchService(
                 i.data.map { d ->
                     SubjectFingerPrintDTO(
                         i.subjectId,
-                        FingerprintTemplate(d.fingerPrintTemplate),
+                        FingerprintTemplate(d.serializedFingerprintTemplate),
                         d.position
                     )
                 }

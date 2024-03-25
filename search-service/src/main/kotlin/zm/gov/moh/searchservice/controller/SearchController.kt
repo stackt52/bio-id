@@ -41,7 +41,7 @@ class SearchController(
         response = MatchScore::class
     )
     fun searchAny(@RequestBody searchPayload: List<FingerprintImageDTO>): Mono<MatchScore> {
-        logger.info("Search payloads: {}", searchPayload)
+        logger.info("Search payloads: {}", searchPayload.map { i -> i.position })
         return searchService.identifyAny(searchPayload)
     }
 

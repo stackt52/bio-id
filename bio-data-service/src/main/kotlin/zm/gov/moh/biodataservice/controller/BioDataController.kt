@@ -54,7 +54,7 @@ class BioDataController(
         responseContainer = "Mono"
     )
     fun create(@RequestBody fingerPrints: List<FingerprintImageDTO>): Mono<FingerprintDTO> {
-        logger.info("Recording fingerprint data = {}", fingerPrints)
+        logger.info("Recording fingerprint data = {}", fingerPrints.map { i -> i.position })
         return bioDataService.add(fingerPrints)
     }
 
@@ -66,7 +66,7 @@ class BioDataController(
         responseContainer = "Mono"
     )
     fun update(@RequestBody fingerPrint: FingerprintDTO): Mono<FingerprintDTO> {
-        logger.info("Updating fingerprint data ={}", fingerPrint)
+        logger.info("Updating fingerprint data ={}", fingerPrint.data.map { i -> i.position })
         return bioDataService.update(fingerPrint)
     }
 

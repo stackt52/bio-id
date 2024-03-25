@@ -6,37 +6,50 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.web.bind.MissingRequestValueException
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.model.ClientDTO
+import zm.gov.moh.enrolmentservice.model.EnrolmentDTO
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
-import java.util.UUID
+import java.util.*
 
 @RestController
 @RequestMapping("/enrolments")
 @Api(tags = ["Enrolment"], description = "Enrolment endpoint")
 class EnrolmentController(
-        @Autowired
-        private val enrolmentService: EnrolmentService
+    @Autowired
+    private val enrolmentService: EnrolmentService
 ) {
 
     companion object {
         private val logger = LoggerFactory.getLogger(EnrolmentController::class.java)
+
+        @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "No valid fingerprint image found")
+        @ExceptionHandler(
+            MissingRequestValueException::class
+        )
+        private fun missingFingerprintsHandler(msg: String): Nothing {
+            throw MissingRequestValueException(msg)
+        }
     }
 
-    @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(
         value = "Register a client",
         response = ClientDTO::class
     )
-    suspend fun add(@RequestBody subject: ClientDTO): ClientDTO {
+    suspend fun add(@ModelAttribute subjectDetails: EnrolmentDTO): ClientDTO {
         try {
-            return enrolmentService.addSubject(subject)
-        } catch (e: Exception) {
-            logger.error("Error occurred when enrolling client: {}", e.stackTrace)
-            throw Throwable(e.message, e.cause)
+            return enrolmentService.addSubject(subjectDetails)
+        } catch (e: MissingRequestValueException) {
+            logger.error("Error occurred when enrolling client: {}", e.message)
+            missingFingerprintsHandler(e.message!!)
         }
     }
 
