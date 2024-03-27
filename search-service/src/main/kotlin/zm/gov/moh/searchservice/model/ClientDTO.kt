@@ -1,6 +1,6 @@
-package zm.gov.moh.enrolmentservice.model
+package zm.gov.moh.searchservice.model
 
-import zm.gov.moh.enrolmentservice.util.Sex
+import zm.gov.moh.searchservice.util.Sex
 import java.time.LocalDate
 import java.util.*
 

@@ -8,14 +8,12 @@ import org.springframework.data.r2dbc.core.select
 import org.springframework.data.relational.core.query.Criteria.where
 import org.springframework.data.relational.core.query.Query.query
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.MissingRequestValueException
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.client.BioDataClient
 import zm.gov.moh.enrolmentservice.client.SearchClient
 import zm.gov.moh.enrolmentservice.entity.Subject
 import zm.gov.moh.enrolmentservice.model.*
-import zm.gov.moh.enrolmentservice.util.Position
 import java.util.*
 
 @Service
@@ -27,12 +25,8 @@ class EnrolmentService(
     @Autowired
     private val template: R2dbcEntityTemplate,
 ) {
-    suspend fun addSubject(enrolmentDTO: EnrolmentDTO): ClientDTO {
+    suspend fun enrolClient(enrolmentDTO: EnrolmentDTO, fingerprintImages: List<FingerprintImageDTO>): ClientDTO {
         val clientId = UUID.randomUUID()
-        val fingerprintImages = fingerprintImages(enrolmentDTO)
-
-        if (fingerprintImages.isEmpty())
-            throw MissingRequestValueException("No valid fingerprint image found.")
 
         fingerprintImages.forEach { v -> v.clientId = clientId }
 
@@ -59,6 +53,7 @@ class EnrolmentService(
                     Mono.just(
                         with(subject) {
                             ClientDTO(
+                                id = id,
                                 firstName = firstName,
                                 lastName = lastName,
                                 sex = sex,
@@ -70,53 +65,10 @@ class EnrolmentService(
                 }.awaitSingle()
 
         } else {
-            val v = findById(matchScore.subjectId).awaitSingle()
-            val (id, firstName, lastName, sex, dateOfBirth) = v
-            ClientDTO(
-                id,
-                firstName,
-                lastName,
-                sex,
-                dateOfBirth,
-                newClient = false
-            )
+            findById(matchScore.subjectId).awaitSingle()
         }
     }
 
-    private fun fingerprintImages(enrolmentDTO: EnrolmentDTO): List<FingerprintImageDTO> {
-        val fingerPrints = mutableListOf<FingerprintImageDTO>()
-        if (enrolmentDTO.rightThumb != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_THUMB, enrolmentDTO.rightThumb.bytes))
-        }
-        if (enrolmentDTO.rightIndex != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_INDEX, enrolmentDTO.rightIndex.bytes))
-        }
-        if (enrolmentDTO.rightMiddle != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_MIDDLE, enrolmentDTO.rightMiddle.bytes))
-        }
-        if (enrolmentDTO.rightRing != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_RING, enrolmentDTO.rightRing.bytes))
-        }
-        if (enrolmentDTO.rightPinky != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_PINKY, enrolmentDTO.rightPinky.bytes))
-        }
-        if (enrolmentDTO.leftThumb != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.LEFT_THUMB, enrolmentDTO.leftThumb.bytes))
-        }
-        if (enrolmentDTO.leftIndex != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.LEFT_INDEX, enrolmentDTO.leftIndex.bytes))
-        }
-        if (enrolmentDTO.leftMiddle != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.LEFT_MIDDLE, enrolmentDTO.leftMiddle.bytes))
-        }
-        if (enrolmentDTO.leftRing != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.LEFT_RING, enrolmentDTO.leftRing.bytes))
-        }
-        if (enrolmentDTO.leftPinky != null) {
-            fingerPrints.add(FingerprintImageDTO(Position.LEFT_PINKY, enrolmentDTO.leftPinky.bytes))
-        }
-        return fingerPrints
-    }
 
     fun findAll(): Flux<ClientDTO> {
         return template.select<Subject>().all().map { i ->

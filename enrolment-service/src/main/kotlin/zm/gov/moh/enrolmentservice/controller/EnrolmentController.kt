@@ -6,13 +6,15 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.web.bind.MissingRequestValueException
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import zm.gov.moh.enrolmentservice.model.ClientDTO
 import zm.gov.moh.enrolmentservice.model.EnrolmentDTO
+import zm.gov.moh.enrolmentservice.model.FingerprintImageDTO
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
+import zm.gov.moh.enrolmentservice.util.BadRequestException
+import zm.gov.moh.enrolmentservice.util.Position
 import java.util.*
 
 @RestController
@@ -25,14 +27,6 @@ class EnrolmentController(
 
     companion object {
         private val logger = LoggerFactory.getLogger(EnrolmentController::class.java)
-
-        @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "No valid fingerprint image found")
-        @ExceptionHandler(
-            MissingRequestValueException::class
-        )
-        private fun missingFingerprintsHandler(msg: String): Nothing {
-            throw MissingRequestValueException(msg)
-        }
     }
 
     @PostMapping(
@@ -45,12 +39,14 @@ class EnrolmentController(
         response = ClientDTO::class
     )
     suspend fun add(@ModelAttribute subjectDetails: EnrolmentDTO): ClientDTO {
-        try {
-            return enrolmentService.addSubject(subjectDetails)
-        } catch (e: MissingRequestValueException) {
-            logger.error("Error occurred when enrolling client: {}", e.message)
-            missingFingerprintsHandler(e.message!!)
+        val fingerprints = fingerprintImages(subjectDetails)
+        if (fingerprints.isEmpty()) {
+            // Web specific exceptions should be thrown in the web layer and not in the service layer.
+            // Not doing so would tie the service layer to web, which is BAD implementation.
+            throw BadRequestException("No fingerprint(s) uploaded.")
         }
+
+        return enrolmentService.enrolClient(subjectDetails, fingerprints)
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -111,5 +107,40 @@ class EnrolmentController(
             logger.error("Error occurred when deleting subject: {}", e.stackTrace)
             throw Throwable(e.message, e.cause)
         }
+    }
+
+    private fun fingerprintImages(enrolmentDTO: EnrolmentDTO): List<FingerprintImageDTO> {
+        val fingerPrints = mutableListOf<FingerprintImageDTO>()
+        if (enrolmentDTO.rightThumb != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_THUMB, enrolmentDTO.rightThumb.bytes))
+        }
+        if (enrolmentDTO.rightIndex != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_INDEX, enrolmentDTO.rightIndex.bytes))
+        }
+        if (enrolmentDTO.rightMiddle != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_MIDDLE, enrolmentDTO.rightMiddle.bytes))
+        }
+        if (enrolmentDTO.rightRing != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_RING, enrolmentDTO.rightRing.bytes))
+        }
+        if (enrolmentDTO.rightPinky != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.RIGHT_PINKY, enrolmentDTO.rightPinky.bytes))
+        }
+        if (enrolmentDTO.leftThumb != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.LEFT_THUMB, enrolmentDTO.leftThumb.bytes))
+        }
+        if (enrolmentDTO.leftIndex != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.LEFT_INDEX, enrolmentDTO.leftIndex.bytes))
+        }
+        if (enrolmentDTO.leftMiddle != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.LEFT_MIDDLE, enrolmentDTO.leftMiddle.bytes))
+        }
+        if (enrolmentDTO.leftRing != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.LEFT_RING, enrolmentDTO.leftRing.bytes))
+        }
+        if (enrolmentDTO.leftPinky != null) {
+            fingerPrints.add(FingerprintImageDTO(Position.LEFT_PINKY, enrolmentDTO.leftPinky.bytes))
+        }
+        return fingerPrints
     }
 }

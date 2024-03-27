@@ -1,4 +1,4 @@
-package zm.gov.moh.enrolmentservice.model
+package zm.gov.moh.searchservice.model
 
 import java.util.*
 
