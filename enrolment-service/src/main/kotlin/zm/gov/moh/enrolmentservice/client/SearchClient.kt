@@ -9,9 +9,6 @@ import zm.gov.moh.enrolmentservice.model.MatchScore
 
 @HttpExchange
 interface SearchClient {
-    @PostExchange("/search")
-    fun search(@RequestBody searchPayload: FingerprintImageDTO): Mono<MatchScore>
-
     @PostExchange("/search/any")
     fun searchAny(@RequestBody searchPayload: List<FingerprintImageDTO>): Mono<MatchScore>
 }
