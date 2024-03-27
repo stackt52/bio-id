@@ -9,6 +9,11 @@ spring:
       port: 6379
       repositories:
         enabled: false
+  servlet:
+    multipart:
+      max-file-size: 300KB
+      max-request-size: 1500KB
+
 # Ideally this port configuration for Netty should be pulled from the config server
 # Will fix this later on
 server:

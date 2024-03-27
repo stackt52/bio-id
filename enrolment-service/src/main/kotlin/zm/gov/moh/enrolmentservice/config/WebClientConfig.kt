@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
-import zm.gov.moh.enrolmentservice.client.FingerprintClient
+import zm.gov.moh.enrolmentservice.client.BioDataClient
 import zm.gov.moh.enrolmentservice.client.SearchClient
 
 @Configuration
@@ -59,12 +59,12 @@ class WebClientConfig(
      * bean created.
      */
     @Bean
-    fun fingerprintClient(): FingerprintClient {
+    fun fingerprintClient(): BioDataClient {
         val httpServiceProxyFactory =
                 HttpServiceProxyFactory
                         .builder(WebClientAdapter.forClient(fingerprintWebClient()))
                         .build()
 
-        return httpServiceProxyFactory.createClient(FingerprintClient::class.java)
+        return httpServiceProxyFactory.createClient(BioDataClient::class.java)
     }
 }

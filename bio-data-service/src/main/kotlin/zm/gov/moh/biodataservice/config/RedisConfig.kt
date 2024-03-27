@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.ReactiveRedisOperations
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.data.redis.serializer.*
-import zm.gov.moh.biodataservice.model.FingerprintDao
+import zm.gov.moh.biodataservice.entity.Fingerprint
 import java.util.UUID
 
 
@@ -29,13 +29,13 @@ class RedisConfig {
     }
 
     @Bean
-    fun redisTemplate(connectionFactory: ReactiveRedisConnectionFactory): ReactiveRedisOperations<String, FingerprintDao> {
-        val serializationContext: RedisSerializationContext<String, FingerprintDao> = RedisSerializationContext
-            .newSerializationContext<String, FingerprintDao>(StringRedisSerializer())
+    fun redisTemplate(connectionFactory: ReactiveRedisConnectionFactory): ReactiveRedisOperations<String, Fingerprint> {
+        val serializationContext: RedisSerializationContext<String, Fingerprint> = RedisSerializationContext
+            .newSerializationContext<String, Fingerprint>(StringRedisSerializer())
             .key(StringRedisSerializer())
-            .value(Jackson2JsonRedisSerializer(FingerprintDao::class.java))
+            .value(Jackson2JsonRedisSerializer(Fingerprint::class.java))
             .hashKey(Jackson2JsonRedisSerializer(UUID::class.java))
-            .hashValue(Jackson2JsonRedisSerializer(FingerprintDao::class.java))
+            .hashValue(Jackson2JsonRedisSerializer(Fingerprint::class.java))
             .build()
 
         return ReactiveRedisTemplate(connectionFactory, serializationContext)
