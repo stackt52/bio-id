@@ -6,6 +6,7 @@
     <file type="web" url="file://$PROJECT_DIR$/bio-data-service" />
     <file type="web" url="file://$PROJECT_DIR$/config-server" />
     <file type="web" url="file://$PROJECT_DIR$/enrolment-service" />
+    <file type="web" url="file://$PROJECT_DIR$/http-client" />
     <file type="web" url="file://$PROJECT_DIR$/http-clientx" />
     <file type="web" url="file://$PROJECT_DIR$/search-service" />
     <file type="web" url="file://$PROJECT_DIR$/service-registry" />
