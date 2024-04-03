@@ -103,6 +103,7 @@ class EnrolmentController(
     fun deleteById(@PathVariable id: String): Mono<ClientDTO> {
         try {
             return enrolmentService.deleteById(UUID.fromString(id))
+                .flatMap { _ -> Mono.empty() }
         } catch (e: Exception) {
             logger.error("Error occurred when deleting subject: {}", e.stackTrace)
             throw Throwable(e.message, e.cause)

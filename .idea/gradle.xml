@@ -28,18 +28,18 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/enrolment-service" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/console-service" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/enrolment-service" />
+            <option value="$PROJECT_DIR$/console-service" />
           </set>
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/http-client" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/enrolment-service" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/http-client" />
+            <option value="$PROJECT_DIR$/enrolment-service" />
           </set>
         </option>
       </GradleProjectSettings>
