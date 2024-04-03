@@ -3,32 +3,22 @@
 The `Enrolment Service` manages details for all enrolled subjects. It exposes endpoints for persisting, reading,
 updating and deleting subject details.
 
-This service interfaces with postgresql for persistence
+This service uses a [postgresql](https://www.postgresql.org/) datastore for persistence.
 
-## Postgresql Setup
+## Features
 
-### Docker volume
-It is recommended to create a docker volume to persist the postgresql data even if the container is stopped or removed
+1. **Subject Details storage and management:** Enables basic CRUD functionalities on subjects and stores subject details including:
+- Name
+- sex
+- Date of birth
+- Id type (e.g nupn, nrc etc)
+- Id number
+2. **System types:** Keeps a log of the different information systems that utilise the bio-id.
 
-```shell
-docker volume create pgdata
-```
+## Service Dependencies
 
-### Run postgresql container
-To start an instance of postgresql in a docker container run the following command in your terminal:
-```shell
-docker run -d --name postgres -e POSTGRES_PASSWORD=<password> -p 5432:5432 -v pgdata:/var/lib/postgresql/data postgres
-```
-The command above also mounts the docker volume created earlier to persist the data.
+- **Search-service:** Sends response to search-service when provided with query
+- **Bio-data-service:** Interfaces with the bio-data-service when a client with a given fingerprint is to be registered in the system
 
-### Access postgresql
-Postgresql can be accessed from your local machine using tools like psql or pgadmin
-
-```shell
-psql -h localhost -U postgres -d postgres
-```
-You'll be prompted to enter the password set up during container creation.
-
-## Database setup
-While making use of either psql or pgadmin, create a new database called enrolment. A script defining the schema can be
-found in resources/schema.sql
+## Postgresql setup
+The latest postgresql version for all systems can be downloaded [here](https://www.postgresql.org/download/), with the installation steps provided.
