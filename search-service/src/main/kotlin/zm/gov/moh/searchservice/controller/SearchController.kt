@@ -1,10 +1,7 @@
 package zm.gov.moh.searchservice.controller
 
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -19,7 +16,6 @@ import zm.gov.moh.searchservice.util.ItemNotFoundException
 
 @RestController
 @RequestMapping("/search")
-@Api(tags = ["Search"], description = "Fingerprint search endpoint")
 class SearchController(
     @Autowired
     private val searchService: SearchService,
@@ -27,11 +23,6 @@ class SearchController(
     @PostMapping(
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
-    )
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(
-        value = "Find a client using a given fingerprint image",
-        response = ClientDTO::class
     )
     fun search(@RequestPart("fingerprint") file: MultipartFile): Mono<ClientDTO> {
         if (file.isEmpty) {
@@ -46,11 +37,6 @@ class SearchController(
     }
 
     @PostMapping("/any", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(
-        value = "Find a client using a given collection of fingerprint templates",
-        response = MatchScore::class
-    )
     fun searchAny(@RequestBody searchPayload: List<FingerprintImageDTO>): Mono<MatchScore> {
         logger.info("Search payloads: {}", searchPayload.map { i -> i.position })
         return searchService.identifyAny(searchPayload)

@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Fingerprint Search API
+  description: API for searching clients using fingerprint images or templates
+paths:
+  /search:
+    post:
+      tags:
+        - Search
+      summary: Find a client using a given fingerprint image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fingerprint:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDTO'
+        '400':
+          description: Bad request
+      operationId: searchClient
+
+  /search/any:
+    post:
+      tags:
+        - Search
+      summary: Find a client using a given collection of fingerprint templates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FingerprintImageDTO'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchScore'
+        '400':
+          description: Bad request
+      operationId: searchAny
+
+components:
+  schemas:
+    ClientDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        sex:
+          $ref: '#/components/schemas/Sex'
+        dateOfBirth:
+          type: string
+          format: date
+        fingerprintImages:
+          type: array
+          items:
+            $ref: '#/components/schemas/FingerprintImageDTO'
+        auxiliaryIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuxiliaryIdDTO'
+        newClient:
+          type: boolean
+      required:
+        - firstName
+        - lastName
+        - sex
+        - dateOfBirth
+
+    MatchScore:
+      type: object
+      properties:
+        subjectId:
+          type: string
+          format: uuid
+        score:
+          type: number
+          format: double
+      required:
+        - subjectId
+        - score
+
+    FingerprintImageDTO:
+      type: object
+      properties:
+        position:
+          $ref: '#/components/schemas/Position'
+        image:
+          type: string
+          format: binary
+        clientId:
+          type: string
+          format: uuid
+      required:
+        - position
+        - image
+      additionalProperties: false
+
+    Sex:
+      type: string
+      enum:
+        - Male
+        - Female
+        - Other
+
+    Position:
+      type: string
+      enum:
+        - RIGHT_THUMB
+        - RIGHT_INDEX
+        - RIGHT_MIDDLE
+        - RIGHT_RING
+        - RIGHT_PINKY
+        - LEFT_THUMB
+        - LEFT_INDEX
+        - LEFT_MIDDLE
+        - LEFT_RING
+        - LEFT_PINKY
+
+    AuxiliaryIdDTO:
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          type: string
+        sourceSystemId:
+          type: string
+          format: uuid
+      required:
+        - type
+        - value
+        - sourceSystemId
