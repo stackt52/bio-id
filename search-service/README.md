@@ -1,6 +1,6 @@
 ## Search Service
 
-The Search service is a component of the NPBVS. It exposes endpoints for searching for a client given a fingerprint
+The `Search-service` exposes endpoints for searching for a client given a fingerprint
 
 ## Features
 
