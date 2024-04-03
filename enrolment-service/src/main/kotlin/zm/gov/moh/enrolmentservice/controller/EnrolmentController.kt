@@ -19,7 +19,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("/enrolments")
-@Api(tags = ["Enrolment"], description = "Enrolment endpoint")
 class EnrolmentController(
     @Autowired
     private val enrolmentService: EnrolmentService
@@ -33,11 +32,6 @@ class EnrolmentController(
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(
-        value = "Register a client",
-        response = ClientDTO::class
-    )
     suspend fun add(@ModelAttribute subjectDetails: EnrolmentDTO): ClientDTO {
         val fingerprints = fingerprintImages(subjectDetails)
         if (fingerprints.isEmpty()) {
@@ -50,11 +44,6 @@ class EnrolmentController(
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ApiOperation(
-        value = "Retrieve all clients",
-        response = ClientDTO::class,
-        responseContainer = "List"
-    )
     fun findAll(): Flux<ClientDTO> {
         try {
             return enrolmentService.findAll()
@@ -65,10 +54,6 @@ class EnrolmentController(
     }
 
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ApiOperation(
-        value = "Find a client by id",
-        response = ClientDTO::class
-    )
     fun findById(@PathVariable id: UUID): Mono<ClientDTO> {
         try {
             return enrolmentService.findById(id)
@@ -80,10 +65,6 @@ class EnrolmentController(
 
     @PutMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(
-        value = "Update a client's enrolment information",
-        response = ClientDTO::class
-    )
     fun updateById(@PathVariable id: UUID, @RequestBody subject: ClientDTO): Mono<ClientDTO> {
         try {
             subject.id = id
@@ -95,11 +76,6 @@ class EnrolmentController(
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(
-        value = "Delete a client",
-        response = ClientDTO::class
-    )
     fun deleteById(@PathVariable id: String): Mono<ClientDTO> {
         try {
             return enrolmentService.deleteById(UUID.fromString(id))

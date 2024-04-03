@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.3"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
+	id("org.openapi.generator") version "7.0.1"
 }
 
 group = "zm.gov.moh"
@@ -23,6 +24,18 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.openapitools:openapi-generator-gradle-plugin:7.0.1")
+	}
+}
+
+apply(plugin = "org.openapi.generator")
 
 extra["springCloudVersion"] = "2022.0.4"
 
@@ -44,6 +57,18 @@ dependencies {
 	implementation ("com.machinezoo.sourceafis:sourceafis:3.18.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
+}
+
+openApiGenerate {
+	inputSpec.set("$rootDir/resources/openapi/api.yaml")
+	generatorName.set("kotlin-spring")
+	apiPackage.set("zm.gov.moh.biodataservice.controller")
+	modelPackage.set("zm.gov.moh.biodataservice.model")
+	configOptions.set(mapOf(
+		"reactive" to "true",
+		"useSpringBoot3" to "true",
+		"delegatePattern" to "true"
+	))
 }
 
 dependencyManagement {

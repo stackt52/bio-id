@@ -38,7 +38,6 @@ class SearchService(
     }
 
     private fun identify(image: ByteArray): Mono<MatchScore> {
-        val threshold = 120.0
         val fImage = FingerprintImage(image)
         val fTemplate = FingerprintTemplate(fImage)
         val matcher = FingerprintMatcher(fTemplate) // this is an expensive operation
@@ -54,7 +53,11 @@ class SearchService(
                 }
             )
         }.map { i -> MatchScore(i.subjectId, matcher.match(i.fingerprintTemplate)) }
-            .filter { i -> i.score >= threshold }
+            .filter { i -> i.score >= FINGERPRINT_THRESHOLD }
             .singleOrEmpty()
+    }
+
+    companion object {
+        private const val FINGERPRINT_THRESHOLD = 120.0
     }
 }
