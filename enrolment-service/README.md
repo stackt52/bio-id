@@ -22,3 +22,7 @@ This service uses a [postgresql](https://www.postgresql.org/) datastore for pers
 
 ## Postgresql setup
 The latest postgresql version for all systems can be downloaded [here](https://www.postgresql.org/download/), with the installation steps provided.
+
+### R2DBC
+This service utilises the [Reactive Relational Database Connectivity](https://r2dbc.io/) API to make it easy for SQL databases
+such as postgresql to take advantage of reactive programming paradigms (i.e. fully non-blocking drivers) used in this project.
