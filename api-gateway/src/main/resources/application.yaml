@@ -10,19 +10,18 @@ spring:
           uri: lb://enrolment-service
           predicates:
             - Path=/enrolments/**
-        - id: enrolment-service-post
-          uri: lb://enrolment-service
-          predicates:
-            - Path=/enrolments/**
-            - Method=POST,PUT
           filters:
             - name: RequestSize
               args:
-                maxSize: 100 KB
+                maxSize: 700 KB
         - id: search-service
           uri: lb://search-service
           predicates:
             - Path=/search/**
+          filters:
+            - name: RequestSize
+              args:
+                maxSize: 100 KB
   main:
     allow-bean-definition-overriding: true
   security:
