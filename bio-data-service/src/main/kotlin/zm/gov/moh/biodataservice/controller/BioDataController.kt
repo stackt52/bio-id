@@ -16,7 +16,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/bio-data")
-@Api(tags = ["Bio-data"], description = "Biometrics endpoint")
 class BioDataController(
     @Autowired
     private val bioDataService: BioDataService
@@ -27,56 +26,28 @@ class BioDataController(
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ApiOperation(
-        value = "Retrieve all the fingerprint data",
-        response = FingerprintDTO::class,
-        responseContainer = "Flux"
-    )
     fun findAll(): Flux<FingerprintDTO> {
         return bioDataService.getAll()
     }
 
     @GetMapping("/{subjectId}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ApiOperation(
-        value = "Retrieve the fingerprint data for a single client using id",
-        response = FingerprintDTO::class,
-        responseContainer = "Mono"
-    )
     fun findById(@PathVariable subjectId: UUID): Mono<FingerprintDTO> {
         return bioDataService.get(subjectId)
     }
 
     @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(
-        value = "Add a client's fingerprint data",
-        response = FingerprintDTO::class,
-        responseContainer = "Mono"
-    )
     fun create(@RequestBody fingerPrints: List<FingerprintImageDTO>): Mono<FingerprintDTO> {
         logger.info("Recording fingerprint data = {}", fingerPrints.map { i -> i.position })
         return bioDataService.add(fingerPrints)
     }
 
     @PutMapping("/{subjectId}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(
-        value = "Update a client's fingerprint data information",
-        response = FingerprintDTO::class,
-        responseContainer = "Mono"
-    )
     fun update(@RequestBody fingerPrint: FingerprintDTO): Mono<FingerprintDTO> {
         logger.info("Updating fingerprint data ={}", fingerPrint.data.map { i -> i.position })
         return bioDataService.update(fingerPrint)
     }
 
     @DeleteMapping("/{subjectId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(
-        value = "Delete a client's fingerprint data",
-        response = FingerprintDTO::class,
-        responseContainer = "Mono"
-    )
     fun delete(@PathVariable subjectId: UUID): Mono<FingerprintDTO> {
         return bioDataService.remove(subjectId)
     }

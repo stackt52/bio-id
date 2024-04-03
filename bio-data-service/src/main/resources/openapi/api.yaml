@@ -1,0 +1,182 @@
+openapi: 3.0.0
+info:
+  title: Biometrics API
+  description: API for managing biometric data
+  version: 1.0.0
+
+paths:
+  /bio-data:
+    get:
+      tags:
+        - Bio-data
+      summary: Retrieve all the fingerprint data
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FingerprintDTO'
+        '500':
+          description: Internal server error
+      operationId: findAllFingerprints
+
+    post:
+      tags:
+        - Bio-data
+      summary: Add a client's fingerprint data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FingerprintImageDTO'
+      responses:
+        '201':
+          description: Fingerprint data created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FingerprintDTO'
+        '500':
+          description: Internal server error
+      operationId: createFingerprint
+
+  /bio-data/{subjectId}:
+    get:
+      tags:
+        - Bio-data
+      summary: Retrieve the fingerprint data for a single client using id
+      parameters:
+        - in: path
+          name: subjectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FingerprintDTO'
+        '404':
+          description: Fingerprint data not found
+        '500':
+          description: Internal server error
+      operationId: findFingerprintById
+
+    put:
+      tags:
+        - Bio-data
+      summary: Update a client's fingerprint data information
+      parameters:
+        - in: path
+          name: subjectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FingerprintDTO'
+      responses:
+        '200':
+          description: Fingerprint data updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FingerprintDTO'
+        '404':
+          description: Fingerprint data not found
+        '500':
+          description: Internal server error
+      operationId: updateFingerprint
+
+    delete:
+      tags:
+        - Bio-data
+      summary: Delete a client's fingerprint data
+      parameters:
+        - in: path
+          name: subjectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Fingerprint data deleted
+        '404':
+          description: Fingerprint data not found
+        '500':
+          description: Internal server error
+      operationId: deleteFingerprint
+
+components:
+  schemas:
+    FingerprintDTO:
+      type: object
+      properties:
+        subjectId:
+          type: string
+          format: uuid
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FingerprintDataDTO'
+        srcSystemId:
+          type: string
+      required:
+        - subjectId
+
+    FingerprintDataDTO:
+      type: object
+      properties:
+        position:
+          $ref: '#/components/schemas/Position'
+        serializedFingerprintTemplate:
+          type: string
+          format: binary
+      required:
+        - position
+        - serializedFingerprintTemplate
+
+    FingerprintImageDTO:
+      type: object
+      properties:
+        position:
+          $ref: '#/components/schemas/Position'
+        image:
+          type: string
+          format: binary
+        clientId:
+          type: string
+          format: uuid
+      required:
+        - position
+        - image
+      additionalProperties: false
+
+    Position:
+      type: string
+      enum:
+        - RIGHT_THUMB
+        - RIGHT_INDEX
+        - RIGHT_MIDDLE
+        - RIGHT_RING
+        - RIGHT_PINKY
+        - LEFT_THUMB
+        - LEFT_INDEX
+        - LEFT_MIDDLE
+        - LEFT_RING
+        - LEFT_PINKY
+
