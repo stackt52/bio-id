@@ -8,11 +8,11 @@ This service uses a [postgresql](https://www.postgresql.org/) datastore for pers
 ## Features
 
 1. **Subject Details storage and management:** Enables basic CRUD functionalities on subjects and stores subject details including:
-- Name
-- sex
-- Date of birth
-- Id type (e.g nupn, nrc etc)
-- Id number
+   - Name
+   - sex
+   - Date of birth
+   - Id type (e.g nupn, nrc etc)
+   - Id number
 2. **System types:** Keeps a log of the different information systems that utilise the bio-id.
 
 ## Service Dependencies
