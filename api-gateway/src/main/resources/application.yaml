@@ -22,6 +22,10 @@ spring:
             - name: RequestSize
               args:
                 maxSize: 100 KB
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
   main:
     allow-bean-definition-overriding: true
   security:
