@@ -31,7 +31,8 @@ class EnrolmentService(
         fingerprintImages.forEach { v -> v.clientId = clientId }
 
         val matchScore =
-            searchClient.searchAny(fingerprintImages).awaitSingleOrNull()
+            searchClient.searchAny(fingerprintImages)
+                .awaitSingleOrNull()
 
         val subject = with(enrolmentDTO) {
             Subject(
