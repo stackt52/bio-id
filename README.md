@@ -43,3 +43,7 @@ identifying for performing 1:1 verification against the probe and stored candida
 ### 8. Console Service
 The `console service` offers functionalities geared for the administration and monitoring of the BioID system. It integrates 
 directly with available services through the service discovery and doesn't make called via the API Gateway.
+
+### 9. Identity Service
+The `identity-service` offers identity management services for the **bio-data-service**. It supports user registration, 
+auth token generation and validation.

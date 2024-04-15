@@ -26,12 +26,15 @@ class AuthService(
 
     fun addUser(userDto: UserDTO): Mono<UserDTO> {
         val user = with(userDto) {
-            User(name = name, email = email, password = password)
+            User(
+                name = name,
+                email = email,
+                password = passwordEncoder.encode(password)
+            )
         }
-        user.password = passwordEncoder.encode(user.password)
 
         return template.insert(user)
-            .map { i -> UserDTO(i.id, i.name, i.email, i.password) }
+            .map { i -> UserDTO(i.id, i.name, i.email, "") }
     }
 
     fun findAll(): Flux<UserDTO> {
@@ -53,13 +56,30 @@ class AuthService(
         jwtService.validateToken(token)
     }
 
-    fun signIn(userCredentials: UserCredentialDTO): Mono<AuthDTO> {
+    private fun getUser(email: String): Mono<UserDTO> {
         return template.selectOne(
             Query.query(
-                Criteria.where("email").`is`(userCredentials.username)
-                    .and(Criteria.where("password").`is`(passwordEncoder.encode(userCredentials.password)))
+                Criteria.where("email").`is`(email)
             ), User::class.java
         ).map { i ->
+            with(i) {
+                UserDTO(
+                    id = id,
+                    email = email,
+                    name = name,
+                    password = password
+                )
+            }
+        }
+    }
+
+    fun signIn(userCredentials: UserCredentialDTO): Mono<AuthDTO> {
+        return getUser(userCredentials.username).flatMap { i ->
+            if (passwordEncoder.matches(userCredentials.password, i.password))
+                Mono.just(i)
+            else
+                Mono.empty()
+        }.map { i ->
             AuthDTO(
                 token = generateToken(i.email)
             )

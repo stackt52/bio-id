@@ -15,7 +15,9 @@ class SecurityConfig {
 
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        return http.authorizeExchange { e ->
+        return http.csrf { i ->
+            i.disable()
+        }.authorizeExchange { e ->
             e.pathMatchers("/auth/users/sign-in", "/auth/token/validate")
                 .permitAll()
         }.build()
