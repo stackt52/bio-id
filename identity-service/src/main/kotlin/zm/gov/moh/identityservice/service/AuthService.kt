@@ -13,6 +13,9 @@ import zm.gov.moh.identityservice.dto.AuthDTO
 import zm.gov.moh.identityservice.dto.UserCredentialDTO
 import zm.gov.moh.identityservice.dto.UserDTO
 import zm.gov.moh.identityservice.entity.User
+import zm.gov.moh.identityservice.util.Claim
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Service
 class AuthService(
@@ -29,12 +32,15 @@ class AuthService(
             User(
                 name = name,
                 email = email,
-                password = passwordEncoder.encode(password)
+                password = passwordEncoder.encode(password),
+                active = active,
+                lastDateUpdated = lastDateUpdated,
+                lastTimeUpdated = lastTimeUpdate
             )
         }
 
         return template.insert(user)
-            .map { i -> UserDTO(i.id, i.name, i.email, "") }
+            .map { i -> UserDTO(i.id, i.name, i.email, "", i.active, i.lastDateUpdated, i.lastTimeUpdated) }
     }
 
     fun findAll(): Flux<UserDTO> {
@@ -43,13 +49,39 @@ class AuthService(
                 id = i.id,
                 name = i.name,
                 email = i.email,
-                password = ""
+                password = "",
+                i.active,
+                i.lastDateUpdated,
+                i.lastTimeUpdated
             )
         }
     }
 
-    private fun generateToken(userName: String): String {
-        return jwtService.generateToken(userName)
+    fun updatePassword(username: String, userCredentials: UserCredentialDTO): Mono<UserDTO> {
+        return template.selectOne(
+            Query.query(Criteria.where("email").`is`(username)),
+            User::class.java
+        ).flatMap { i ->
+            i.email = userCredentials.username
+            i.password = passwordEncoder.encode(userCredentials.password)
+            i.lastDateUpdated = LocalDate.now()
+            i.lastTimeUpdated = LocalTime.now()
+            template.update(i)
+        }.map { i ->
+            UserDTO(
+                id = i.id,
+                name = i.name,
+                email = i.email,
+                password = "",
+                i.active,
+                i.lastDateUpdated,
+                i.lastTimeUpdated
+            )
+        }
+    }
+
+    private fun generateToken(userName: String, claims: Map<String, Any>): String {
+        return jwtService.generateToken(userName, claims)
     }
 
     fun validateToken(token: String) {
@@ -67,7 +99,10 @@ class AuthService(
                     id = id,
                     email = email,
                     name = name,
-                    password = password
+                    password = password,
+                    active = active,
+                    lastDateUpdated = lastDateUpdated,
+                    lastTimeUpdate = lastTimeUpdated
                 )
             }
         }
@@ -80,8 +115,12 @@ class AuthService(
             else
                 Mono.empty()
         }.map { i ->
+            val claims = mapOf(
+                Pair<String, Any>(Claim.SOURCE_SYS_ID.name, i.id!!),
+                Pair<String, Any>(Claim.USERNAME.name, i.email)
+            )
             AuthDTO(
-                token = generateToken(i.email)
+                token = generateToken(i.email, claims)
             )
         }
     }
