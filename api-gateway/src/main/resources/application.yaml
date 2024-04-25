@@ -35,3 +35,5 @@ spring:
             - Method=POST,PUT
           filters:
             - name: AuthenticationFilter
+  main:
+    allow-bean-definition-overriding: true
