@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+    <!-- format is as follows
+    <rule id="<unique id>">
+        <accepts>page.html</accepts>
+    </rule>
+    -->
+    <rule id="3dcc6b09">
+        <description>Created after removal of "Enrolment" from documentation</description>
+        <accepts>Enrolment.html</accepts>
+    </rule>
+    <rule id="4eb79cc1">
+        <description>Created after removal of "About documentation" from documentation</description>
+        <accepts>starter-topic.html</accepts>
+    </rule>
+    <rule id="199977c9">
+        <description>Created after removal of "/enrolments GET" from documentation</description>
+        <accepts>enrolments_GET.html</accepts>
+    </rule>
+    <rule id="4494f8">
+        <description>Created after removal of "/enrolments/{id} DELETE" from documentation</description>
+        <accepts>enrolments_id_DELETE.html</accepts>
+    </rule>
+    <rule id="5cb405a3">
+        <description>Created after removal of "/enrolments/{id} PUT" from documentation</description>
+        <accepts>enrolments_id_PUT.html</accepts>
+    </rule>
+    <rule id="49d52775">
+        <description>Created after removal of "/enrolments/{id} GET" from documentation</description>
+        <accepts>enrolments_id_GET.html</accepts>
+    </rule>
+</rules>

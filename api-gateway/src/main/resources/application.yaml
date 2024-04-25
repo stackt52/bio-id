@@ -9,27 +9,29 @@ spring:
         - id: enrolment-service
           uri: lb://enrolment-service
           predicates:
-            - Path=/enrolments/**
+            - Path=/enrolments
+            - Method=POST
           filters:
             - name: RequestSize
               args:
                 maxSize: 700 KB
+            - name: AuthenticationFilter
+
         - id: search-service
           uri: lb://search-service
           predicates:
-            - Path=/search/**
+            - Path=/search
+            - Method=POST
           filters:
             - name: RequestSize
               args:
                 maxSize: 100 KB
-        - id: auth-service
-          uri: lb://auth-service
+            - name: AuthenticationFilter
+
+        - id: identity-service
+          uri: lb://identity-service
           predicates:
-            - Path=/auth/**
-  main:
-    allow-bean-definition-overriding: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8089/realms/npbvs
+            - Path=/auth/users/**
+            - Method=POST,PUT
+          filters:
+            - name: AuthenticationFilter

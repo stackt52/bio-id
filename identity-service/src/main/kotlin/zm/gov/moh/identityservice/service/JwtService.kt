@@ -15,8 +15,7 @@ class JwtService {
         Jwts.parser().verifyWith(SECRET).build().parseSignedClaims(token)
     }
 
-    fun generateToken(userName: String): String {
-        val claims = mutableMapOf<String, Any>()
+    fun generateToken(userName: String, claims: Map<String, Any>): String {
         return createToken(claims, userName)
     }
 
