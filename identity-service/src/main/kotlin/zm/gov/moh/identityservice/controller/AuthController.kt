@@ -17,7 +17,9 @@ import zm.gov.moh.identityservice.util.UnauthorizedException
 @RequestMapping("/auth")
 class AuthController(
     @Autowired
-    private val authService: AuthService
+    private val authService: AuthService,
+    //@Autowired
+    //private val reactiveAuthenticationManager: ReactiveAuthenticationManager
 ) {
     @PostMapping("/users", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
@@ -28,7 +30,24 @@ class AuthController(
     @GetMapping("/users", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     fun getUsers(): Flux<UserDTO> {
+//        val authentication = reactiveAuthenticationManager.authenticate(
+//            UsernamePasswordAuthenticationToken("username", "password")
+//        )
+//
+//        return authentication.toFlux().flatMap { i ->
+//            if (i.isAuthenticated)
+//                authService.findAll()
+//            else
+//                Flux.empty()
+//        }
         return authService.findAll()
+    }
+
+    @PutMapping("/users/{username}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun updateUser(@PathVariable username: String ,@RequestBody userCredentialDTO: UserCredentialDTO): Mono<UserDTO> {
+        return authService.updatePassword(username, userCredentialDTO)
+            .flatMap { Mono.empty() }
     }
 
     @PostMapping("/users/sign-in", produces = [MediaType.APPLICATION_JSON_VALUE])
