@@ -1,6 +1,8 @@
 package zm.gov.moh.identityservice.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.event.ApplicationStartedEvent
+import org.springframework.context.ApplicationListener
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.r2dbc.core.select
 import org.springframework.data.relational.core.query.Criteria
@@ -16,6 +18,7 @@ import zm.gov.moh.identityservice.entity.User
 import zm.gov.moh.identityservice.util.Claim
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 
 @Service
 class AuthService(
@@ -25,7 +28,7 @@ class AuthService(
     private val jwtService: JwtService,
     @Autowired
     private val template: R2dbcEntityTemplate
-) {
+) : ApplicationListener<ApplicationStartedEvent> {
 
     fun addUser(userDto: UserDTO): Mono<UserDTO> {
         val user = with(userDto) {
@@ -84,11 +87,16 @@ class AuthService(
         return jwtService.generateToken(userName, claims)
     }
 
-    fun validateToken(token: String) {
-        jwtService.validateToken(token)
+    fun validateToken(token: String): Boolean {
+        return try {
+            jwtService.validateToken(token)
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
-    private fun getUser(email: String): Mono<UserDTO> {
+    fun getUser(email: String): Mono<UserDTO> {
         return template.selectOne(
             Query.query(
                 Criteria.where("email").`is`(email)
@@ -119,9 +127,22 @@ class AuthService(
                 Pair<String, Any>(Claim.SOURCE_SYS_ID.name, i.id!!),
                 Pair<String, Any>(Claim.USERNAME.name, i.email)
             )
+            val(_, name, username) = i
             AuthDTO(
-                token = generateToken(i.email, claims)
+                username,
+                name,
+                token = generateToken(username, claims)
             )
         }
+    }
+
+    override fun onApplicationEvent(event: ApplicationStartedEvent) {
+        val userDto = UserDTO(
+            id = UUID.fromString("00000000-0000-0000-0000-000000000000"),
+            name = "admin",
+            email = "admin@bioid.com",
+            password = "default"
+        )
+        getUser(userDto.email).switchIfEmpty(addUser(userDto)).subscribe()
     }
 }

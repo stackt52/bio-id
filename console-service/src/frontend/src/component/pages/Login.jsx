@@ -1,12 +1,26 @@
 import Box from "@mui/material/Box";
 import {Container} from "@mui/material";
-import LogIn from "../LogIn";
+import LoginForm from "../common/LoginForm";
+import {useContext, useEffect} from "react";
+import {AuthContext} from "../../context/Default";
+import {useNavigate} from "react-router-dom";
+import initRequestObject from "../../util/api";
 
-export default function SignIn() {
+export default function Login() {
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (auth.user) {
+            initRequestObject() // reinitialize request obj to add auth headers
+            navigate("/dashboard")
+        }
+    }, [auth])
+
     return (
         <Box sx={{display: 'flex', flexDirection: 'row', minHeight: '100vh', alignItems: 'stretch'}}>
             <Container sx={{flex: '2'}}>
-                <LogIn></LogIn>
+                <LoginForm></LoginForm>
             </Container>
 
             <Container sx={{

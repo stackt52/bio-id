@@ -8,8 +8,8 @@ data class UserDTO(
     var id: UUID?,
     val name: String,
     val email: String,
-    val password: String,
-    val active: Boolean,
-    val lastDateUpdated: LocalDate,
-    val lastTimeUpdate: LocalTime
+    var password: String,
+    val active: Boolean = true,
+    val lastDateUpdated: LocalDate = LocalDate.now(),
+    val lastTimeUpdate: LocalTime = LocalTime.now()
 )
