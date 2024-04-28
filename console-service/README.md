@@ -26,7 +26,7 @@ In order to build the console-service (front-end & back-end):
 1. Run gradle `./gradlew clean` task.
 2. Then run `./gradlew bootJar`. This will trigger the following processes:
    - Download `Node v21` if not yet done. 
-   - `npm install` front-end packages if necessary.
+   - `npm install` front-end packages if necessary. (If `gradle` fails to `npm install` the deps you will need to manually install them. Will fix this late :))
    - Create a production ready version of the app.
    - Copy the front-end assets into the back-end service build dir.
    - Create a jar file ready for deployment.
