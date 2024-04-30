@@ -6,11 +6,13 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
-import Sidebar from "../Sidebar";
+import Sidebar from "../common/Sidebar";
 import IconButton from "@mui/material/IconButton";
 import {Notifications, Person} from "@mui/icons-material";
-import {Outlet} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 import {Container} from "@mui/material";
+import {useContext, useEffect} from "react";
+import {AuthContext} from "../../context/Default";
 
 
 const drawerWidth = 240;
@@ -84,6 +86,14 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
 export default function Dashboard() {
     const [open, setOpen] = React.useState(false);
 
+    const auth = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!auth.user)
+            navigate("/login", {replace: true});
+    }, [auth])
+
     const toggleOpen = () => {
         setOpen(!open);
     };
@@ -99,7 +109,7 @@ export default function Dashboard() {
                     <IconButton>
                         <Notifications/>
                     </IconButton>
-                    <IconButton href="/signin">
+                    <IconButton href="/login">
                         <Person/>
                     </IconButton>
                 </Toolbar>

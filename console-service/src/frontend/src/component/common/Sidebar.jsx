@@ -8,7 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 import {styled, useTheme} from "@mui/material/styles";
-import {sidebarMenuList} from "../constants/SidebarMenuList";
+import {sidebarMenuList} from "../../constant/SidebarMenuList";
 import {NavLink} from "react-router-dom";
 
 

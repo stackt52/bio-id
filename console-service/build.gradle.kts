@@ -48,6 +48,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("io.netty:netty-resolver-dns-native-macos:4.1.109.Final")
 }
 
 dependencyManagement {

@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import {Container} from "@mui/material";
-import LogIn from "../LogIn";
+import LoginForm from "../common/LoginForm";
 
-export default function SignIn() {
+export default function Login() {
+
     return (
         <Box sx={{display: 'flex', flexDirection: 'row', minHeight: '100vh', alignItems: 'stretch'}}>
             <Container sx={{flex: '2'}}>
-                <LogIn></LogIn>
+                <LoginForm></LoginForm>
             </Container>
 
             <Container sx={{

@@ -14,6 +14,7 @@ import zm.gov.moh.identityservice.service.AuthService
 import zm.gov.moh.identityservice.util.UnauthorizedException
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 class AuthController(
     @Autowired
@@ -31,7 +32,14 @@ class AuthController(
         return authService.findAll()
     }
 
-    @PostMapping("/users/sign-in", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PutMapping("/users/{username}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun updateUser(@PathVariable username: String, @RequestBody userCredentialDTO: UserCredentialDTO): Mono<UserDTO> {
+        return authService.updatePassword(username, userCredentialDTO)
+            .flatMap { Mono.empty() }
+    }
+
+    @PostMapping("/users/login", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     fun signIn(@RequestBody userCredential: UserCredentialDTO): Mono<AuthDTO> {
         return authService.signIn(userCredential)
@@ -43,9 +51,7 @@ class AuthController(
     @PostMapping("/token/validate", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
     fun validateToken(@RequestBody authDTO: AuthDTO) {
-        try {
-            return authService.validateToken(authDTO.token)
-        } catch (_: Exception) {
+        if (!authService.validateToken(authDTO.token)) {
             throw UnauthorizedException("Invalid token.")
         }
     }

@@ -1,11 +1,30 @@
-import {Button, Container, InputAdornment, Link, TextField} from "@mui/material";
+import {Button, Container, InputAdornment, TextField} from "@mui/material";
 import Box from "@mui/material/Box";
 import {Lock, Person} from "@mui/icons-material";
 import {grey} from "@mui/material/colors";
-import Divider from "@mui/material/Divider";
-import {NavLink} from "react-router-dom";
+import {useContext, useState} from "react";
+import {AuthDispatchContext} from "../../context/Default";
+import {postItem} from "../../util/functions";
 
-export default function LogIn() {
+export default function LoginForm() {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const dispatch = useContext(AuthDispatchContext)
+
+    const login = (e) => {
+        postItem("/auth/users/login", {username, password})
+            .then(data => {
+                const {username, name, token} = data
+                dispatch(
+                    {
+                        type: "SET_USER",
+                        payload: {username, name, token}
+                    }
+                )
+                console.log(data)
+            }).catch(err => console.log(err));
+    }
+
     return (
         <Container sx={{
             display: 'flex',
@@ -19,7 +38,10 @@ export default function LogIn() {
             <TextField
                 sx={{my: 1}}
                 label="Username"
+                placeholder="Enter your username"
                 variant="filled"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
@@ -31,8 +53,10 @@ export default function LogIn() {
                 sx={{my: 1}}
                 id="password"
                 label="Password"
-                placeholder="Type your password"
+                placeholder="Enter your password"
                 required={true}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 variant="filled"
                 InputProps={{
@@ -43,14 +67,7 @@ export default function LogIn() {
                     ),
                 }}/>
 
-            <NavLink to="/dashboard">
-                <Button sx={{my: 1}} variant="outlined" size="small">LogIn</Button>
-            </NavLink>
-
-            <Divider variant="middle" sx={{width: '200px', my: 2}}/>
-
-            <Box sx={{fontSize: 'caption.fontSize', color: grey["500"], my: 1}}>Log-In using <Link href="#"
-                                                                                                   underline="none">KEYCLOAK</Link>.</Box>
+            <Button sx={{my: 1}} variant="contained" size="small" onClick={login}>LogIn</Button>
         </Container>
     )
 }

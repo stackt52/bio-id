@@ -1,7 +1,11 @@
 import {Container} from "@mui/material";
 import Box from "@mui/material/Box";
+import {useContext, useEffect} from "react";
+import {AuthContext} from "../../context/Default";
+import {useNavigate} from "react-router-dom";
 
 export default function Welcome() {
+
     return (
         <Container sx={{
             minHeight: '100vh',
