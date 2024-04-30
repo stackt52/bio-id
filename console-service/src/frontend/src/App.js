@@ -14,16 +14,20 @@ import {lazyLoadRoutes} from "./util/functions";
 import {useEffect, useReducer} from "react";
 import initRequestObject from "./util/api";
 import {getAuthUserData} from "./util/security";
+import Welcome from "./component/pages/Welcome";
+import ContentShell from "./component/pages/ContentShell";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route>
-            <Route index name="Welcome" element={lazyLoadRoutes('Welcome')} />
-            <Route path="login" name="Login" element={lazyLoadRoutes('Login')}/>
-            <Route path="dashboard" name="Dashboard" element={lazyLoadRoutes('Dashboard')}>
-                <Route index element={<Home/>}/>
-                <Route path="enrolment" element={<Enrolment/>}/>
-                <Route path="settings" element={<Setting/>}/>
+            <Route path="/" element={<ContentShell />}>
+                <Route index name="Welcome" element={<Welcome/>}/>
+                <Route path="login" name="Login" element={lazyLoadRoutes('Login')}/>
+                <Route path="dashboard" name="Dashboard" element={lazyLoadRoutes('Dashboard')}>
+                    <Route index element={<Home/>}/>
+                    <Route path="enrolment" element={<Enrolment/>}/>
+                    <Route path="settings" element={<Setting/>}/>
+                </Route>
             </Route>
         </Route>
     )
@@ -31,9 +35,10 @@ const router = createBrowserRouter(
 
 function App() {
     const [auth, dispatch] = useReducer(authReducer, {user: getAuthUserData()})
+
     useEffect(() => {
         initRequestObject()
-    },[])
+    }, [])
 
     return (
         <Box sx={{height: '100vh'}} className="App">

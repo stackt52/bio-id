@@ -1,11 +1,11 @@
 import {lazy, Suspense} from "react";
 import axios from "axios";
 
-export function lazyLoadRoutes(componentName) {
+export function lazyLoadRoutes(componentName, props = {}) {
     const LazyElement = lazy(() => import(`../component/pages/${componentName}`));
     return (
         <Suspense fallback="Loading...">
-            <LazyElement/>
+            <LazyElement {...props}/>
         </Suspense>
     );
 }

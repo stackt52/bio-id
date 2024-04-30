@@ -1,25 +1,7 @@
 import {Container} from "@mui/material";
 import Box from "@mui/material/Box";
-import {useContext, useEffect} from "react";
-import {AuthContext} from "../../context/Default";
-import {useNavigate} from "react-router-dom";
 
 export default function Welcome() {
-    const auth = useContext(AuthContext)
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            if (auth.user)
-                navigate("/dashboard")
-            else
-                navigate("/login")
-        }, 3000);
-
-        return () => {
-            clearTimeout(timeout)
-        }
-    }, [auth])
 
     return (
         <Container sx={{
