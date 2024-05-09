@@ -10,9 +10,10 @@ import Sidebar from "../common/Sidebar";
 import IconButton from "@mui/material/IconButton";
 import {Notifications, Person} from "@mui/icons-material";
 import {Outlet, useNavigate} from "react-router-dom";
-import {Container} from "@mui/material";
-import {useContext, useEffect} from "react";
-import {AuthContext} from "../../context/Default";
+import {Container, Menu, MenuItem} from "@mui/material";
+import {useContext, useEffect, useState} from "react";
+import {AuthContext, AuthDispatchContext, ProgressDispatchContext} from "../../context/Default";
+import {AuthUserAction} from "../../util/constants";
 
 
 const drawerWidth = 240;
@@ -84,8 +85,11 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
 );
 
 export default function Dashboard() {
-    const [open, setOpen] = React.useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openUserMenu, setOpenUserMenu] = useState(false)
+    const [anchorElUser, setAnchorElUser] = useState(null);
 
+    const authDispatch = useContext(AuthDispatchContext);
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
 
@@ -94,14 +98,27 @@ export default function Dashboard() {
             navigate("/login", {replace: true});
     }, [auth])
 
-    const toggleOpen = () => {
-        setOpen(!open);
+    const toggleOpenDrawer = () => {
+        setOpenDrawer(!openDrawer);
     };
+
+    const toggleOpenUserMenu = (e) => {
+        if (openUserMenu)
+            setAnchorElUser(null)
+        else
+            setAnchorElUser(e.currentTarget)
+        setOpenUserMenu(!openUserMenu);
+    }
+
+    const logout = () => {
+        setOpenUserMenu(false)
+        authDispatch({type: AuthUserAction.reset})
+    }
 
     return (
         <Box sx={{display: 'flex', bgcolor: 'grey.100', minHeight: '100vh'}}>
             <CssBaseline/>
-            <AppBar position="fixed" open={open} sx={{boxShadow: 0, bgcolor: 'primary.contrastText'}}>
+            <AppBar position="fixed" open={openDrawer} sx={{boxShadow: 0, bgcolor: 'primary.contrastText'}}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{color: 'common.black', flexGrow: 1}}>
                         Dashboard
@@ -109,13 +126,36 @@ export default function Dashboard() {
                     <IconButton>
                         <Notifications/>
                     </IconButton>
-                    <IconButton href="/login">
+                    <IconButton onClick={toggleOpenUserMenu}>
                         <Person/>
                     </IconButton>
+                    <Menu
+                        sx={{mt: '45px'}}
+                        id="menu-appbar"
+                        anchorEl={anchorElUser}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={openUserMenu}
+                        onClose={() => setOpenUserMenu(false)}
+                    >
+                        <MenuItem key="profile">
+                            <Typography textAlign="center">Profile</Typography>
+                        </MenuItem>
+                        <MenuItem key="logout" onClick={logout}>
+                            <Typography textAlign="center">Logout</Typography>
+                        </MenuItem>
+                    </Menu>
                 </Toolbar>
             </AppBar>
-            <Drawer variant="permanent" open={open}>
-                <Sidebar toggleOpen={toggleOpen} open={open}></Sidebar>
+            <Drawer variant="permanent" open={openDrawer}>
+                <Sidebar toggleOpen={toggleOpenDrawer} open={openDrawer}></Sidebar>
             </Drawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <DrawerHeader/>
