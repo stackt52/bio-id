@@ -157,7 +157,7 @@ export default function Dashboard() {
             <Drawer variant="permanent" open={openDrawer}>
                 <Sidebar toggleOpen={toggleOpenDrawer} open={openDrawer}></Sidebar>
             </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
+            <Box component="main" sx={{flexGrow: 1, p: 3, borderRadius: '5px'}}>
                 <DrawerHeader/>
 
                 <Container>
