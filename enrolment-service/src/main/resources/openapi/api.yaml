@@ -16,6 +16,19 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/SubjectList"
+              examples:
+                example:
+                  value:
+                    - id: "123e4567-e89b-12d3-a456-426614174000"
+                      firstName: "John"
+                      lastName: "Doe"
+                      sex: "Male"
+                      dateOfBirth: 1900-01-01
+                    - id: "789e1234-e89b-12d3-a456-426614174111"
+                      firstName: "Jane"
+                      lastName: "Doe"
+                      sex: "Female"
+                      dateOfBirth: 1900-01-01
 
     post:
       description: Register a subject for biometric fingerprint verification
@@ -27,9 +40,43 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Subject"
+            examples:
+              example:
+                value:
+                  firstName: "John"
+                  lastName: "Doe"
+                  sex: "Male"
+                  dateOfBirth: 1900-01-01
+                  sourceSubjectId: "000-000-000"
+                  sourceSystem: "SmartCare"
+                  fingerPrints:
+                     - position: "LEFT_PINKY"
+                       image: "base64encodedimage5"
+                     - position: "RIGHT_PINKY"
+                       image: "base64encodedimage6"
       responses:
         "201":
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+              examples:
+                example1:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    firstName: "John"
+                    lastName: "Doe"
+                    sex: "Male"
+                    sourceSubjectId: "000-000-000"
+                    sourceSystem: "SmartCare"
+                    fingerPrints:
+                      - subjectId: "123e4567-e89b-12d3-a456-426614174000"
+                        position: "LEFT_PINKY"
+                        image: "base64encodedimage5"
+                      - subjectId: "j123e4567-e89b-12d3-a456-426614174000"
+                        position: "RIGHT_PINKY"
+                        image: "base64encodedimage6"
 
   /enrolments/{id}:
     get:
@@ -50,6 +97,22 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/Subject"
+              examples:
+                example:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    firstName: "John"
+                    lastName: "Doe"
+                    sex: "Male"
+                    sourceSubjectId: "000-000-000"
+                    sourceSystem: "SmartCare"
+                    fingerPrints:
+                      - subjectId: "123e4567-e89b-12d3-a456-426614174000"
+                        position: "LEFT_PINKY"
+                        image: "base64encodedimage1"
+                      - subjectId: "123e4567-e89b-12d3-a456-426614174000"
+                        position: "RIGHT_PINKY"
+                        image: "base64encodedimage2"
         "400":
           description: Specified subject ID is not a valid uuid
         "404":
@@ -66,6 +129,15 @@ paths:
           description: The subject id
           schema:
             type: string
+          examples:
+            example:
+              value:
+                - id: "123e4567-e89b-12d3-a456-426614174000"
+                  firstName: "John"
+                  lastName: "Doe"
+                  sex: "Male"
+                  dateOfBirth: 1910-01-01
+
       responses:
         "204":
           description: Subject updated successfully

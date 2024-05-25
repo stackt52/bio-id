@@ -19,6 +19,10 @@ paths:
                 fingerprint:
                   type: string
                   format: binary
+            examples:
+              example:
+                value:
+                  fingerprint: "base64encodedimage"
       responses:
         '200':
           description: Successful operation
@@ -26,6 +30,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClientDTO'
+              examples:
+                example:
+                  value:
+                    id: "123e4567-e89b-12d3-a456-426614174000"
+                    firstName: "John"
+                    lastName: "Doe"
+                    sex: "Male"
+                    dateOfBirth: "1900-01-01"
+                    fingerprintImages:
+                      - position: "RIGHT_THUMB"
+                        image: "base64encodedimage1"
+                        clientId: "123e4567-e89b-12d3-a456-426614174000"
+                      - position: "LEFT_THUMB"
+                        image: "base64encodedimage2"
+                        clientId: "123e4567-e89b-12d3-a456-426614174000"
+                    auxiliaryIds:
+                      - type: "national registration number"
+                        value: "123456/68/1"
+                        sourceSystemId: "456e7890-e89b-12d3-a456-426614174111"
+                    newClient: false
         '400':
           description: Bad request
       operationId: searchClient
@@ -43,6 +67,15 @@ paths:
               type: array
               items:
                 $ref: '#/components/schemas/FingerprintImageDTO'
+            examples:
+              example:
+                value:
+                  - position: "RIGHT_THUMB"
+                    image: "base64encodedimage1"
+                    clientId: "123e4567-e89b-12d3-a456-426614174000"
+                  - position: "LEFT_THUMB"
+                    image: "base64encodedimage2"
+                    clientId: "123e4567-e89b-12d3-a456-426614174000"
       responses:
         '200':
           description: Successful operation
@@ -50,6 +83,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MatchScore'
+              example:
+                example1:
+                  value:
+                    subjectId: "123e4567-e89b-12d3-a456-426614174000"
+                    score: 95.5
         '400':
           description: Bad request
       operationId: searchAny
