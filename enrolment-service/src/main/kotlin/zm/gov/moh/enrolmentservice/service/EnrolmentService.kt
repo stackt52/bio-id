@@ -1,7 +1,5 @@
 package zm.gov.moh.enrolmentservice.service
 
-import kotlinx.coroutines.reactor.awaitSingle
-import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.r2dbc.core.select
@@ -10,6 +8,7 @@ import org.springframework.data.relational.core.query.Query.query
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import zm.gov.moh.enrolmentservice.client.BioDataClient
 import zm.gov.moh.enrolmentservice.client.SearchClient
 import zm.gov.moh.enrolmentservice.entity.Subject
@@ -25,49 +24,89 @@ class EnrolmentService(
     @Autowired
     private val template: R2dbcEntityTemplate,
 ) {
-    suspend fun enrolClient(enrolmentDTO: EnrolmentDTO, fingerprintImages: List<FingerprintImageDTO>): ClientDTO {
+    fun enrolClient(enrolmentDTO: EnrolmentDTO, fingerprintImages: List<FingerprintImageDTO>): Mono<ClientDTO> {
         val clientId = UUID.randomUUID()
 
         fingerprintImages.forEach { v -> v.clientId = clientId }
 
-        val matchScore =
-            searchClient.searchAny(fingerprintImages)
-                .awaitSingleOrNull()
-
-        val subject = with(enrolmentDTO) {
-            Subject(
-                id = clientId,
-                firstName,
-                lastName,
-                sex,
-                dateOfBirth
-            )
-        }
-
-        return if (matchScore == null) {
-            template.insert(subject)
-                .flatMap { _ ->
-                    bioDataClient.create(
-                        fingerprintImages
+        // Attempt searching fingerprint(s) before enrolling new client
+        return searchClient.searchAny(fingerprintImages)
+            .flatMap { i ->
+                findById(i.subjectId)
+            }.switchIfEmpty {
+                // if search operation returned no result, enrol client
+                val subject = with(enrolmentDTO) {
+                    Subject(
+                        id = clientId,
+                        firstName,
+                        middleName,
+                        lastName,
+                        sex,
+                        dateOfBirth
                     )
-                }.flatMap { _ ->
-                    Mono.just(
-                        with(subject) {
-                            ClientDTO(
-                                id = id,
-                                firstName = firstName,
-                                lastName = lastName,
-                                sex = sex,
-                                dateOfBirth = dateOfBirth,
-                                newClient = true
-                            )
-                        }
-                    )
-                }.awaitSingle()
+                }
+                template.insert(subject)
+                    .flatMap { _ ->
+                        bioDataClient.create(
+                            fingerprintImages
+                        )
+                    }.flatMap { _ ->
+                        Mono.just(
+                            with(subject) {
+                                ClientDTO(
+                                    id = id,
+                                    firstName = firstName,
+                                    middleName = middleName,
+                                    lastName = lastName,
+                                    sex = sex,
+                                    dateOfBirth = dateOfBirth,
+                                    newClient = true
+                                )
+                            }
+                        )
+                    }
+            }
 
-        } else {
-            findById(matchScore.subjectId).awaitSingle()
-        }
+//        val matchScore =
+//            searchClient.searchAny(fingerprintImages)
+//                .awaitSingleOrNull()
+//
+//        val subject = with(enrolmentDTO) {
+//            Subject(
+//                id = clientId,
+//                firstName,
+//                middleName,
+//                lastName,
+//                sex,
+//                dateOfBirth
+//            )
+//        }
+//
+//        return if (matchScore == null) {
+//            template.insert(subject)
+//                .flatMap { _ ->
+//                    bioDataClient.create(
+//                        fingerprintImages
+//                    )
+//                }.flatMap { _ ->
+//                    Mono.just(
+//                        with(subject) {
+//                            ClientDTO(
+//                                id = id,
+//                                firstName = firstName,
+//                                middleName = middleName,
+//                                lastName = lastName,
+//                                sex = sex,
+//                                dateOfBirth = dateOfBirth,
+//                                newClient = true
+//                            )
+//                        }
+//                    )
+//                }.awaitSingle()
+//
+//        } else {
+//            findById(matchScore.subjectId).awaitSingle()
+//        }
     }
 
 
@@ -76,6 +115,7 @@ class EnrolmentService(
             ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
+                middleName = i.middleName,
                 lastName = i.lastName,
                 sex = i.sex,
                 dateOfBirth = i.dateOfBirth
@@ -88,6 +128,7 @@ class EnrolmentService(
             ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
+                middleName = i.middleName,
                 lastName = i.lastName,
                 sex = i.sex,
                 dateOfBirth = i.dateOfBirth
@@ -97,11 +138,12 @@ class EnrolmentService(
 
     fun updateById(subject: ClientDTO): Mono<ClientDTO> {
         // TODO: update also subject's auxiliaryIds, and bioData fingerprints
-        val (id, firstName, lastName, sex, dateOfBirth) = subject
-        return template.update(ClientDTO(id, firstName, lastName, sex, dateOfBirth)).map { i ->
+        val (id, firstName, middleName, lastName, sex, dateOfBirth) = subject
+        return template.update(ClientDTO(id, firstName, middleName, lastName, sex, dateOfBirth)).map { i ->
             ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
+                middleName = i.middleName,
                 lastName = i.lastName,
                 sex = i.sex,
                 dateOfBirth = i.dateOfBirth
@@ -114,6 +156,7 @@ class EnrolmentService(
             ClientDTO(
                 id = i.id,
                 firstName = i.firstName,
+                middleName = i.middleName,
                 lastName = i.lastName,
                 sex = i.sex,
                 dateOfBirth = i.dateOfBirth

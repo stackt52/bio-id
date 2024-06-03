@@ -50,9 +50,10 @@ class AuthController(
 
     @PostMapping("/token/validate", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun validateToken(@RequestBody authDTO: AuthDTO) {
-        if (!authService.validateToken(authDTO.token)) {
+    fun validateToken(@RequestBody authDTO: AuthDTO): Mono<Boolean> {
+        return if (authService.validateToken(authDTO.token))
+            Mono.just(true)
+        else
             throw UnauthorizedException("Invalid token.")
-        }
     }
 }

@@ -49,7 +49,8 @@ function App() {
                 <AuthDispatchContext.Provider value={dispatch}>
                     <ProgressContext.Provider value={progressState}>
                         <ProgressDispatchContext.Provider value={dispatchProgressState}>
-                            <SnackbarProvider anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
+                            <SnackbarProvider style={{maxWidth: '400px'}} preventDuplicate maxSnack={4}
+                                              anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
                                 <RouterProvider router={router}/>
                             </SnackbarProvider>
                         </ProgressDispatchContext.Provider>

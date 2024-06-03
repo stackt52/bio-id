@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
 import zm.gov.moh.consoleservice.client.EnrolmentClient
+import zm.gov.moh.consoleservice.client.IdentityClient
 import zm.gov.moh.consoleservice.client.SearchClient
 
 @Configuration
@@ -35,6 +36,14 @@ class WebClientConfig(
             .build()
     }
 
+    @Bean
+    fun identityWebClient(): WebClient {
+        return WebClient.builder()
+            .baseUrl("http://identity-service")
+            .filter(filterFunction)
+            .build()
+    }
+
     /**
      * Create a managed bean for the EnrolmentClient object type using the WebClient
      * bean created.
@@ -49,7 +58,6 @@ class WebClientConfig(
         return httpServiceProxyFactory.createClient(EnrolmentClient::class.java)
     }
 
-
     /**
      * Create a managed bean for the SearchClient object type using the WebClient
      * bean created.
@@ -62,5 +70,15 @@ class WebClientConfig(
                 .build()
 
         return httpServiceProxyFactory.createClient(SearchClient::class.java)
+    }
+
+    @Bean
+    fun identityClient(): IdentityClient {
+        val httpServiceProxyFactory =
+            HttpServiceProxyFactory
+                .builder(WebClientAdapter.forClient(identityWebClient()))
+                .build()
+
+        return httpServiceProxyFactory.createClient(IdentityClient::class.java)
     }
 }

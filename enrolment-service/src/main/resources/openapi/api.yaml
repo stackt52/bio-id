@@ -15,21 +15,29 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/SubjectList"
+                $ref: "#/components/schemas/ClientDTOList"
 
     post:
-      description: Register a subject for biometric fingerprint verification
-      tags: ["Enrolments"]
-      operationId: "add"
+      description: The endpoint registers a new client if the submitted fingerprints does not have a match from previously submitted fingerprints.
+      tags: [ "Enrolments" ]
+      operationId: "enroll"
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: "#/components/schemas/Subject"
+              $ref: "#/components/schemas/EnrolmentDTO"
       responses:
         "201":
-          description: Created
+          description: "Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClientDTO"
+
+        400:
+          description: Bad request
+
 
   /enrolments/{id}:
     get:
@@ -49,7 +57,7 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: "#/components/schemas/Subject"
+                $ref: "#/components/schemas/ClientDTO"
         "400":
           description: Specified subject ID is not a valid uuid
         "404":
@@ -57,7 +65,7 @@ paths:
 
     put:
       description: Update subject's basic information
-      tags: ["Enrolments"]
+      tags: [ "Enrolments" ]
       operationId: "update"
       parameters:
         - name: id
@@ -74,7 +82,7 @@ paths:
 
     delete:
       description: Delete enrolled subject
-      tags: ["Enrolments"]
+      tags: [ "Enrolments" ]
       operationId: "delete"
       parameters:
         - name: id
@@ -91,64 +99,93 @@ paths:
 
 components:
   schemas:
-    SubjectList:
+    ClientDTOList:
       type: array
       items:
-        $ref: "#/components/schemas/Subject"
+        $ref: "#/components/schemas/ClientDTO"
 
-    SourceSystemList:
-      type: array
-      items:
-        $ref: "#/components/schemas/SourceSystem"
-
-    SourceSystem:
+    AuxiliaryId:
       type: object
       required:
-        - code
-        - name
+        - type
+        - value
+        - sourceSystemId
       properties:
-        code:
+        type:
           type: string
-        name:
+        value:
+          type: string
+        sourceSystemId:
           type: string
 
-    FingerprintData:
-      type: object
-      properties:
-        subjectId:
-          type: string
-        position:
-          type: string
-        image:
-          type: string
-      required:
-        - subjectId
-        - position
-        - image
-
-    Subject:
+    ClientDTO:
       type: object
       required:
         - firstName
         - lastName
         - sex
-        - sourceSubjectId
-        - sourceSystem
+        - dateOfBirth
+        - newClient
       properties:
         id:
           type: string
         firstName:
           type: string
+        middleName:
+          type: string
         lastName:
           type: string
         sex:
           type: string
-        sourceSubjectId:
+        dateOfBirth:
           type: string
-        sourceSystem:
-          type: string
-        fingerPrints:
+        auxiliaryIds:
           type: array
           items:
-            $ref: "#/components/schemas/FingerprintData"
+            $ref: "#/components/schemas/AuxiliaryId"
+        newClient:
+          type: boolean
+
+    EnrolmentDTO:
+      type: object
+      required:
+        - firstName
+        - middleName
+        - lastName
+        - sex
+        - clientIdName
+        - clientIdValue
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        sex:
+          type: string
+        clientIdName:
+          type: string
+        clientIdValue:
+          type: string
+        rightThumb:
+          type: object
+        rightIndex:
+          type: object
+        rightMiddle:
+          type: object
+        rightRing:
+          type: object
+        rightPinky:
+          type: object
+        leftThumb:
+          type: object
+        leftIndex:
+          type: object
+        leftMiddle:
+          type: object
+        leftRing:
+          type: object
+        leftPinky:
+          type: object
 

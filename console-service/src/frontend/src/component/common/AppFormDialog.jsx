@@ -7,9 +7,20 @@ import {
     DialogTitle,
 } from "@mui/material";
 
-export default function EnrolmentDialog({title = "Title", subTitle = "", actionButtonLabel = "Ok", open, handleClose, children}) {
+export default function AppFormDialog(
+    {
+        title = "Title",
+        subTitle = "",
+        actionButtonLabel = "Ok",
+        open,
+        setFormData,
+        handleClose,
+        children
+    }
+) {
     return (
         <Dialog
+            disableEscapeKeyDown
             open={open}
             onClose={handleClose}
             PaperProps={{
@@ -18,9 +29,7 @@ export default function EnrolmentDialog({title = "Title", subTitle = "", actionB
                     event.preventDefault();
                     const formData = new FormData(event.currentTarget);
                     const formJson = Object.fromEntries(formData.entries());
-                    console.log(formJson)
-                    const email = formJson.email;
-                    console.log(email);
+                    setFormData(formJson)
                     handleClose();
                 },
             }}

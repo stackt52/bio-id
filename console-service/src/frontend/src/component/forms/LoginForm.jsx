@@ -45,6 +45,7 @@ export default function LoginForm() {
                         type: ProgressType.complete
                     }
                 )
+                console.log(data)
             }).catch(err => {
             progressStateDispatch(
                 {

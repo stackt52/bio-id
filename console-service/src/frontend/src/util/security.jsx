@@ -1,7 +1,10 @@
+import initRequestObject from "./api";
+
 const AUTH_STORAGE_KEY = 'AUTH_USER_DETAILS';
 
 export function saveAuthUser(data) {
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data));
+    initRequestObject()
 }
 
 export function getAuthUserData() {

@@ -40,7 +40,7 @@ class SearchService(
     private fun identify(image: ByteArray): Mono<MatchScore> {
         val fImage = FingerprintImage(image)
         val fTemplate = FingerprintTemplate(fImage)
-        val matcher = FingerprintMatcher(fTemplate) // this is an expensive operation
+        val matcher = FingerprintMatcher(fTemplate) // this is an expensive operation. Use with caution!
 
         return bioDataClient.findAll().flatMap { i ->
             Flux.fromIterable(

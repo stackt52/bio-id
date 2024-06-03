@@ -1,91 +1,96 @@
-import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import EnrolmentDialog from "../common/EnrolmentDialog";
 import EnrolmentForm from "../forms/EnrolmentForm";
-import {Fab} from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AppDataGrid from "../common/AppDataGrid";
-
-function CustomTabPanel(props) {
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{p: 3}}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-}
-
-CustomTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
+import Paper from "@mui/material/Paper";
+import {getItem} from "../../util/functions";
+import CustomTabPanel from "../common/CustomTabPanel";
+import Typography from "@mui/material/Typography";
+import BioSearch from "../common/BioSearch";
 
 function a11yProps(index) {
     return {
         id: `tab-${index}`,
-        'aria-controls': `tabpanel-${index}`,
+        'aria-controls': `tab-panel-${index}`,
     };
 }
 
 export default function Enrolment() {
-    const [openDialog, setOpenDialog] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpenDialog(true);
-    };
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
+    const list = [
+        {
+            id: 'firstName',
+            numeric: false,
+            disablePadding: true,
+            label: 'First name',
+        },
+        {
+            id: 'lastName',
+            numeric: false,
+            disablePadding: false,
+            label: 'Last name',
+        },
+        {
+            id: 'sex',
+            numeric: false,
+            disablePadding: false,
+            label: 'Sex',
+        },
+        {
+            id: 'dateOfBirth',
+            numeric: false,
+            disablePadding: false,
+            label: 'Date of Birth',
+        }
+    ];
     const [value, setValue] = useState(0);
+    const [data, setData] = useState([])
+    const [orderBy, setOrderBy] = useState('firstName');
+    const [selected, setSelected] = useState([]);
+    const [headCells] = useState(list)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    useEffect(() => {
+        getItem('/enrolments').then(data => {
+            console.log(data)
+            setData(data)
+        }).catch(e => {
+            console.error(e)
+        })
+    }, [])
+
     return (
-        <Box sx={{bgcolor: 'primary.contrastText'}}>
+        <Paper sx={{bgcolor: 'primary.contrastText'}}>
             <Box sx={{width: '100%'}}>
                 <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
                     <Tabs value={value} onChange={handleChange} aria-label="tabs">
-                        <Tab label="Enrolments" {...a11yProps(0)} />
-                        <Tab label="New..." {...a11yProps(1)} />
+                        <Tab label="Search" {...a11yProps(0)} />
+                        <Tab label="Enrolments" {...a11yProps(1)} />
+                        <Tab label="New..." {...a11yProps(2)} />
                     </Tabs>
                 </Box>
-                <CustomTabPanel value={value} index={0}>
-                    <AppDataGrid/>
+                <CustomTabPanel index={value} value={0}>
+                    <BioSearch />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
+                    <AppDataGrid
+                        heading="Enrolled clients"
+                        data={data}
+                        orderBy={orderBy}
+                        selected={selected}
+                        headCells={headCells}
+                        setOrderBy={setOrderBy}
+                        setSelected={setSelected}
+                    />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
                     <EnrolmentForm/>
                 </CustomTabPanel>
             </Box>
-
-            <EnrolmentDialog
-                title="Enrol client"
-                actionButtonLabel="enrol"
-                open={openDialog}
-                handleClose={handleClose}>
-                <EnrolmentForm/>
-            </EnrolmentDialog>
-
-            <Fab color="primary" aria-label="add"
-                 sx={{position: "absolute", bottom: "30px", right: "30px", zIndex: '100'}}>
-                <AddIcon onClick={handleClickOpen}/>
-            </Fab>
-        </Box>
+        </Paper>
     )
 }

@@ -28,5 +28,4 @@ data class FingerprintData(
     override fun toString(): String {
         return "{pos: ${pos}, fingerPrintTemplate: ${fingerPrintTemplate}}"
     }
-
 }

@@ -13,7 +13,7 @@ import java.util.*
 @Service
 class JwtService {
     companion object {
-        private val SECRET = Jwts.SIG.HS256.key().build()
+        private val SECRET = Jwts.SIG.HS512.key().build()
     }
 
     fun validateToken(token: String) {

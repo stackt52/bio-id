@@ -1,3 +1,3 @@
 # API Reference
 
-Start typing here...
+The API documentation highlights

@@ -12,8 +12,9 @@ li a {
   color: #555;
 }
 
-.hidden {
-  display: none;
+.hidden,
+[hidden] {
+  display: none !important;
 }
 
 code {

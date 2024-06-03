@@ -5,8 +5,9 @@ import java.time.LocalDate
 import java.util.*
 
 data class ClientDTO(
-    var id: UUID? = null,
+    var id: UUID,
     val firstName: String,
+    var middleName: String? = null,
     val lastName: String,
     val sex: Sex,
     val dateOfBirth: LocalDate,

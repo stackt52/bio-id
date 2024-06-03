@@ -7,6 +7,7 @@ import java.util.*
 data class ClientDTO(
     var id: UUID? = null,
     val firstName: String,
+    val middleName: String,
     val lastName: String,
     val sex: Sex,
     val dateOfBirth: LocalDate,

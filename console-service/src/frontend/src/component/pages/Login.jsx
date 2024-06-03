@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import {Container} from "@mui/material";
-import LoginForm from "../common/LoginForm";
+import LoginForm from "../forms/LoginForm";
 
 export default function Login() {
 
