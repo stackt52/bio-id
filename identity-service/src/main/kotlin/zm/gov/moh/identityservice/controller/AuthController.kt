@@ -45,7 +45,7 @@ class AuthController(
         return authService.signIn(userCredential)
             .switchIfEmpty {
                 Mono.error(UnauthorizedException("Invalid credentials."))
-            }
+            }.onErrorMap { i -> UnauthorizedException("Invalid username or password") }
     }
 
     @PostMapping("/token/validate", produces = [MediaType.APPLICATION_JSON_VALUE])

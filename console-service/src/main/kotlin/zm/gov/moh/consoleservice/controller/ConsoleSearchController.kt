@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import reactor.core.publisher.Mono
 import zm.gov.moh.consoleservice.client.SearchClient
 import zm.gov.moh.consoleservice.model.ClientDTO
@@ -30,7 +29,7 @@ class ConsoleSearchController(
         response = ClientDTO::class
     )
     fun search(@RequestPart("fingerprint") file: FilePart): Mono<ClientDTO> {
-        return searchClient.search(file).onErrorMap { i ->
+        return searchClient.search(file).onErrorMap { _ ->
             ItemNotFoundException("Item not found")
         }
     }
