@@ -12,6 +12,7 @@ import zm.gov.moh.consoleservice.client.IdentityClient
 import zm.gov.moh.consoleservice.model.AuthDTO
 import zm.gov.moh.consoleservice.model.UserCredentialDTO
 import zm.gov.moh.consoleservice.model.UserDTO
+import zm.gov.moh.consoleservice.util.UnauthorizedException
 
 @RestController
 @RequestMapping("/console/auth")
@@ -36,6 +37,8 @@ class ConsoleIdentityController(
     @ResponseStatus(HttpStatus.OK)
     fun signIn(@RequestBody userCredential: UserCredentialDTO): Mono<AuthDTO> {
         return identityClient.signIn(userCredential)
+            .onErrorMap { i -> UnauthorizedException("Invalid username or password") }
+
     }
 
     @PostMapping("/token/validate", produces = [MediaType.APPLICATION_JSON_VALUE])

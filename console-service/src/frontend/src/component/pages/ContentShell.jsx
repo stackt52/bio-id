@@ -14,6 +14,7 @@ export default function ContentShell() {
     const dispatch = useContext(AuthDispatchContext)
     const navigate = useNavigate()
     const [progress, setProgress] = useState(0)
+    const [hide, setHide] = useState(false)
     const progressState = useContext(ProgressContext)
     const progressStateDispatch = useContext(ProgressDispatchContext)
 
@@ -46,6 +47,7 @@ export default function ContentShell() {
     useEffect(() => {
         switch (progressState.state) {
             case ProgressType.start:
+                setHide(false)
                 // Gradually update the progress bar from 0 to <= 75
                 // between the intervals of 250 milliseconds
                 __progressUpdaterInterval = setInterval(() => {
@@ -66,6 +68,7 @@ export default function ContentShell() {
                 }, 1500)
                 break
             default:
+                setHide(true)
                 setProgress(0)
                 break
         }
@@ -75,7 +78,7 @@ export default function ContentShell() {
 
     return (
         <Box sx={{height: '100vh'}} className="App">
-            <LinearProgress variant="determinate" value={progress} sx={{
+            <LinearProgress hidden={hide} variant="determinate" value={progress} sx={{
                 position: 'fixed',
                 width: '100%',
                 top: 0,
