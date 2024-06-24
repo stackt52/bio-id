@@ -5,7 +5,9 @@ info:
   description: This service handled client biometrics fingerprint enrolment
 paths:
   /enrolments:
+    # GET Method
     get:
+      summary: "Get all enrolled clients"
       description: Returns all enrolled clients
       tags: [ "Enrolments" ]
       operationId: "get"
@@ -16,9 +18,13 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/ClientDTOList"
-
+        401:
+          description: Not authorized to perform action.
+    # POST Method
     post:
-      description: The endpoint registers a new client if the submitted fingerprints does not have a match from previously submitted fingerprints.
+      summary: "Enrol new client"
+      description: "The endpoint registers a new client if the submitted 
+      fingerprints does not have a match from previously submitted fingerprints."
       tags: [ "Enrolments" ]
       operationId: "enroll"
       requestBody:
@@ -27,28 +33,43 @@ paths:
           multipart/form-data:
             schema:
               $ref: "#/components/schemas/EnrolmentDTO"
+            example:
+              firstName: "John"
+              middleName: "Middle"
+              lastName: "Doe"
+              sex: "M"
+              dateOfBirth: "1990-01-17"
+              clientIdName: "NRC"
+              clientIdValue: "123456/66/9"
+              rightThumb: "[10, 145, 140, 188, 212, 198, 210, 25, 152, 20, 120, 15, 49,..]"
+              rightMiddle: "[10, 145, 140, 188, 212, 198, 210, 25, 152, 20, 120, 15, 49,...]"
+              leftThumb: "[10, 145, 140, 188, 212, 198, 210, 25, 152, 20, 120, 15, 49,...]"
+
       responses:
         "201":
-          description: "Created"
+          description: "New client successfully enrolled"
           content:
             "application/json":
               schema:
                 $ref: "#/components/schemas/ClientDTO"
 
         400:
-          description: Bad request
-
+          description: "The payload sent with request is invalid"
+        401:
+          description: Not authorized to perform action.
 
   /enrolments/{id}:
+    # GET Method
     get:
-      description: Returns a subject by id
+      summary: "Get client by ID"
+      description: Returns a client with matching ID.
       tags: [ "Enrolments" ]
       operationId: "getById"
       parameters:
         - name: id
           in: path
           required: true
-          description: The subject id.
+          description: Return the client with matching ID
           schema:
             type: string
       responses:
@@ -62,9 +83,9 @@ paths:
           description: Specified subject ID is not a valid uuid
         "404":
           description: Post not found
-
+    # PUT Method
     put:
-      description: Update subject's basic information
+      description: Update client's auxiliary IDs.
       tags: [ "Enrolments" ]
       operationId: "update"
       parameters:
@@ -76,10 +97,10 @@ paths:
             type: string
       responses:
         "204":
-          description: Subject updated successfully
+          description: Subject updated successfully.
         "400":
-          description: Specified subject ID is not a valid uuid
-
+          description: Specified subject ID is not a valid uuid.
+    # DELETE Method
     delete:
       description: Delete enrolled subject
       tags: [ "Enrolments" ]
@@ -117,6 +138,9 @@ components:
           type: string
         sourceSystemId:
           type: string
+      example:
+        type: "NRC"
+        value: "123456/66/9"
 
     ClientDTO:
       type: object
@@ -145,14 +169,28 @@ components:
             $ref: "#/components/schemas/AuxiliaryId"
         newClient:
           type: boolean
+      example:
+        id: "0b6f8ca3-2262-4520-b3ae-af67ddaba70d"
+        firstName: "John"
+        middleName: "Middle"
+        lastName: "Doe"
+        sex: "M"
+        dateOfBirth: "1990-01-17"
+        auxiliaryIds: [
+          {
+            type: "NRC",
+            value: "123456/66/9"
+          }
+        ]
+        newClient: true
 
     EnrolmentDTO:
       type: object
       required:
         - firstName
-        - middleName
         - lastName
         - sex
+        - dateOfBirth
         - clientIdName
         - clientIdValue
       properties:
@@ -164,28 +202,51 @@ components:
           type: string
         sex:
           type: string
+        dateOfBirth:
+          type: string
         clientIdName:
           type: string
         clientIdValue:
           type: string
         rightThumb:
-          type: object
+          type: string
+          format: binary
         rightIndex:
-          type: object
+          type: string
+          format: binary
         rightMiddle:
-          type: object
+          type: string
+          format: binary
         rightRing:
-          type: object
+          type: string
+          format: binary
         rightPinky:
-          type: object
+          type: string
+          format: binary
         leftThumb:
-          type: object
+          type: string
+          format: binary
         leftIndex:
-          type: object
+          type: string
+          format: binary
         leftMiddle:
-          type: object
+          type: string
+          format: binary
         leftRing:
-          type: object
+          type: string
+          format: binary
         leftPinky:
-          type: object
+          type: string
+          format: binary
+      example:
+        firstName: "John"
+        middleName: "Middle"
+        lastName: "Doe"
+        sex: "M"
+        dateOfBirth: "1990-01-17"
+        clientIdName: "NRC"
+        clientIdValue: "123456/66/9"
+        rightThumb: "[10, 145, 140, 188, 212, 198, 210, 25, 152, 20, 120, 15, 49,..]"
+        rightMiddle: "[10, 145, 140, 188, 212, 198, 210, 25, 152, 20, 120, 15, 49,...]"
+        leftThumb: "[10, 145, 140, 188, 212, 198, 210, 25, 152, 20, 120, 15, 49,...]"
 

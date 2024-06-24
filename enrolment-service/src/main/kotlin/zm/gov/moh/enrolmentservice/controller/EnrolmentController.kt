@@ -7,10 +7,7 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import zm.gov.moh.enrolmentservice.model.ClientDTO
-import zm.gov.moh.enrolmentservice.model.EnrolmentDTO
-import zm.gov.moh.enrolmentservice.model.EnrolmentJsonDTO
-import zm.gov.moh.enrolmentservice.model.FingerprintImageDTO
+import zm.gov.moh.enrolmentservice.model.*
 import zm.gov.moh.enrolmentservice.service.EnrolmentService
 import zm.gov.moh.enrolmentservice.util.BadRequestException
 import zm.gov.moh.enrolmentservice.util.MultipartFileConverter
@@ -64,7 +61,7 @@ class EnrolmentController(
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     fun findAll(): Flux<ClientDTO> {
         try {
-            return enrolmentService.findAll()
+            return enrolmentService.findAllClients()
         } catch (e: Exception) {
             logger.error("Error occurred when getting subjects: {}", e.stackTrace)
             throw Throwable(e.message, e.cause)
@@ -74,7 +71,7 @@ class EnrolmentController(
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun findById(@PathVariable id: UUID): Mono<ClientDTO> {
         try {
-            return enrolmentService.findById(id)
+            return enrolmentService.findClientById(id)
         } catch (e: Exception) {
             logger.error("Error occurred when retrieving subject with id = {}: {}", id, e.stackTrace)
             throw Throwable(e.message, e.cause)
@@ -83,12 +80,11 @@ class EnrolmentController(
 
     @PutMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.OK)
-    fun updateById(@PathVariable id: UUID, @RequestBody subject: ClientDTO): Mono<ClientDTO> {
+    fun updateById(@PathVariable id: UUID, @RequestBody auxiliaryIds: List<AuxiliaryIdDTO>): Mono<ClientDTO> {
         try {
-            subject.id = id
-            return enrolmentService.updateById(subject)
+            return enrolmentService.updateAuxiliaryIdsById(id, auxiliaryIds)
         } catch (e: Exception) {
-            logger.error("Error occurred when updating subject = {}: {}", subject, e.stackTrace)
+            logger.error("Error occurred when updating subject = {}: {}", auxiliaryIds, e.stackTrace)
             throw Throwable(e.message, e.cause)
         }
     }
@@ -96,7 +92,7 @@ class EnrolmentController(
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: String): Mono<ClientDTO> {
         try {
-            return enrolmentService.deleteById(UUID.fromString(id))
+            return enrolmentService.deleteClientById(UUID.fromString(id))
                 .flatMap { _ -> Mono.empty() }
         } catch (e: Exception) {
             logger.error("Error occurred when deleting subject: {}", e.stackTrace)

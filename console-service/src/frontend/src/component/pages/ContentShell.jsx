@@ -48,24 +48,29 @@ export default function ContentShell() {
         switch (progressState.state) {
             case ProgressType.start:
                 setHide(false)
-                // Gradually update the progress bar from 0 to <= 75
-                // between the intervals of 250 milliseconds
-                __progressUpdaterInterval = setInterval(() => {
-                    if (progress <= 75)
-                        setProgress(progress + 5)
-                }, 250)
+                if (progress === 0) {
+                    // Gradually update the progress bar from 0 to <= 75
+                    // between the intervals of 250 milliseconds
+                    __progressUpdaterInterval = setInterval(() => {
+                        if (progress <= 75)
+                            setProgress(progress + 5)
+                    }, 250)
+                }
                 break
             case ProgressType.complete:
-                clearInterval(__progressUpdaterInterval)
-                setProgress(100)
-                setTimeout(() => {
-                    if (progressStateDispatch)
-                        progressStateDispatch(
-                            {
-                                type: ProgressType.reset,
-                            }
-                        )
-                }, 1500)
+                if (__progressUpdaterInterval != null) {
+                    clearInterval(__progressUpdaterInterval)
+                    setProgress(100)
+                    setTimeout(() => {
+                        if (progressStateDispatch)
+                            progressStateDispatch(
+                                {
+                                    type: ProgressType.reset,
+                                }
+                            )
+                    }, 1500)
+                    __progressUpdaterInterval = null
+                }
                 break
             default:
                 setHide(true)

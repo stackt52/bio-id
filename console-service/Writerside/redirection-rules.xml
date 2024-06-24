@@ -30,4 +30,100 @@
         <description>Created after removal of "/enrolments/{id} GET" from documentation</description>
         <accepts>enrolments_id_GET.html</accepts>
     </rule>
+    <rule id="4c6386be">
+        <description>Created after removal of "/enrolments POST" from BioID</description>
+        <accepts>enrolments_POST.html</accepts>
+    </rule>
+    <rule id="6cf897c6">
+        <description>Created after removal of "API Reference" from BioID</description>
+        <accepts>API_Reference.html</accepts>
+    </rule>
+    <rule id="347b039b">
+        <description>Created after removal of "How to" from BioID</description>
+        <accepts>How-to.html</accepts>
+    </rule>
+    <rule id="49572211">
+        <description>Created after removal of "Validate token" from BioID</description>
+        <accepts>Validate_token.html</accepts>
+    </rule>
+    <rule id="6107bd12">
+        <description>Created after removal of "Log in user" from BioID</description>
+        <accepts>Log_in_user.html</accepts>
+    </rule>
+    <rule id="3a7707be">
+        <description>Created after removal of "Update user password" from BioID</description>
+        <accepts>Update_user_password.html</accepts>
+    </rule>
+    <rule id="4a9ad10c">
+        <description>Created after removal of "Create user account" from BioID</description>
+        <accepts>Create_user_account.html</accepts>
+    </rule>
+    <rule id="2308f55d">
+        <description>Created after removal of "Get all accounts" from BioID</description>
+        <accepts>Get_all_accounts.html</accepts>
+    </rule>
+    <rule id="38300eba">
+        <description>Created after removal of "API Reference" from BioID</description>
+        <accepts>API_Reference.html</accepts>
+    </rule>
+    <rule id="a3384d7">
+        <description>Created after removal of "Validate token" from BioID</description>
+        <accepts>Validate_token.html</accepts>
+    </rule>
+    <rule id="62a59654">
+        <description>Created after removal of "Log in user" from BioID</description>
+        <accepts>Log_in_user.html</accepts>
+    </rule>
+    <rule id="44bd7386">
+        <description>Created after removal of "Update user password" from BioID</description>
+        <accepts>Update_user_password.html</accepts>
+    </rule>
+    <rule id="439d5ff1">
+        <description>Created after removal of "Create user account" from BioID</description>
+        <accepts>Create_user_account.html</accepts>
+    </rule>
+    <rule id="40057602">
+        <description>Created after removal of "Get all accounts" from BioID</description>
+        <accepts>Get_all_accounts.html</accepts>
+    </rule>
+    <rule id="6cfa91c3">
+        <description>Created after removal of "API Reference" from BioID</description>
+        <accepts>API_Reference.html</accepts>
+    </rule>
+    <rule id="7c7f4561">
+        <description>Created after removal of "Create user account" from BioID</description>
+        <accepts>Create_user_account.html</accepts>
+    </rule>
+    <rule id="57a3bb2c">
+        <description>Created after removal of "Get all accounts" from BioID</description>
+        <accepts>Get_all_accounts.html</accepts>
+    </rule>
+    <rule id="52ae0a89">
+        <description>Created after removal of "/enrolments/{id} DELETE" from BioID</description>
+        <accepts>enrolments_id_DELETE.html</accepts>
+    </rule>
+    <rule id="4ec135fd">
+        <description>Created after removal of "Get all enrolled clients" from BioID</description>
+        <accepts>Get_all_enrolled_clients.html</accepts>
+    </rule>
+    <rule id="7c8b6ba4">
+        <description>Created after removal of "Find a client using a given collection of fingerprint templates" from
+            BioID
+        </description>
+        <accepts>Find_a_client_using_a_given_collection_of_fingerprint_templates.html</accepts>
+    </rule>
+    <rule id="6a07e475">
+        <description>Created after removal of "Find a client using a given fingerprint image" from BioID</description>
+        <accepts>Find_a_client_using_a_given_fingerprint_image.html</accepts>
+    </rule>
+    <rule id="1221b741">
+        <description>Created after removal of "API Reference" from BioID</description>
+        <accepts>API_Reference_2.html</accepts>
+    </rule>
+    <rule id="574c2125">
+        <description>Created after removal of "Find a client using a given collection of fingerprint templates" from
+            BioID
+        </description>
+        <accepts>Find_a_client_using_a_given_collection_of_fingerprint_templates.html</accepts>
+    </rule>
 </rules>

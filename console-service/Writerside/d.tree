@@ -8,6 +8,16 @@
 
     <toc-element topic="Overview.md"/>
     <toc-element topic="API_Reference.md">
-        <toc-element topic="enrolments_POST.md"/>
+        <toc-element topic="Log_in_user.md"/>
+        <toc-element topic="Validate_token.md"/>
+        <toc-element topic="Update_user_password.md"/>
+    </toc-element>
+    <toc-element topic="API_Reference_1.md">
+        <toc-element topic="Enrol_new_client.md"/>
+        <toc-element topic="Get_client_by_ID.md"/>
+        <toc-element topic="enrolments_id_PUT.md"/>
+    </toc-element>
+    <toc-element topic="API_Reference_2.md">
+        <toc-element topic="Find_a_client_using_a_given_fingerprint_image.md"/>
     </toc-element>
 </instance-profile>

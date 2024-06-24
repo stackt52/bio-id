@@ -1,28 +1,53 @@
-# Overview
+# BioID System
 
-The BioID system supports the enrolments of client fingerprints together with the basic profile 
-information. The system also offer search functionality through biometric fingerprint verification. 
-When performing a search, if a client if found with any of the fingerprints submitted the system 
-responds with basic profile of matched client.
+## Overview
+
+The `BioID system` is a client management system that supports the registration of client's fingerprints 
+together with their basic demographic information. Once a client has been registered, they can be 
+searched from any system that connects with the BioID system. This introduces an efficient 
+`centralized approach to client profile management` which promotes continuity of service provision 
+across system boundaries.
+
+#### Challenges the BioID address:
+- Siloed client information captured in different systems. 
+- Duplicate client profile. 
+- Ineffective client verification procedures. 
+- Administrative burden by multiple manual data entry. 
+- Un-streamlined workflows - spending more time on client management than actual service delivery. 
+- Provide some background and context, explain choices and alternatives.
 
 ## Architecture
 
-The system has been built on a microservice architecture for scalability, resiliency, and high-availability 
-requirements.
-> Since functionalities are isolated in dedicated services, each service can be efficiently scaled up in 
-> isolation of the others.
-> 
-{style="note"}
+The system has been built on a microservice architecture which enables services to be scaled 
+independently, allowing for efficient resource utilization and handling of increased load for 
+specific components.
 
-## Services
-The BioID system offers two primary services: `Enrolment` and `Search`.
+Since functionalities are isolated in dedicated services, each service can be efficiently scaled 
+up in isolation in response to traffic accordingly - leading to optimized performance and 
+cost-efficiency.
 
-## Glossary
+#### System interaction
 
-A definition list or a glossary:
+The logical diagram below depicts the interaction between source systems with the BioID 
+microservice-based client management system.
 
-Enrolment
-: This is the registration of client's fingerprint together with their fingerprint images.
+![BioID logical diagram](bioid-logical-diagram.svg)
 
-Search
-: This is the verification of clients details using their biometric fingerprints.
+The system exposes three primary services accessible to client applications: Identity, 
+Enrolment, and Search. All client requests are managed through a single entry 
+point - the API Gateway, which implements crosscutting concerns such as authentication, 
+logging, routing etc.
+
+## Public services
+
+The following are the publicly accessible services to client applications.
+
+Identity service
+: Handles source systems identity management functionalities such as authentication and authorization.
+
+Enrolment Service
+: Handles the registration of source systems client's basic demographic information together 
+with their fingerprint images, and attached auxiliary IDs.
+
+Search service
+: Handles the verification of clients using biometric fingerprints.
