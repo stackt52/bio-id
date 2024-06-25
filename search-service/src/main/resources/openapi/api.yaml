@@ -121,7 +121,6 @@ components:
       enum:
         - Male
         - Female
-        - Other
 
     Position:
       type: string

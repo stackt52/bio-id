@@ -13,12 +13,8 @@ public class JAuthenticationFilter extends AbstractGatewayFilterFactory<JAuthent
 
     @Override
     public GatewayFilter apply(Config config) {
-        return (((exchange, chain) -> {
-
-            return chain.filter(exchange);
-        }));
+        return (((exchange, chain) -> chain.filter(exchange)));
     }
-
 
     public static class Config {
 
