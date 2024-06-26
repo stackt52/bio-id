@@ -3,11 +3,12 @@ CREATE SCHEMA IF NOT EXISTS sys;
 
 CREATE TABLE IF NOT EXISTS client.subject
 (
-    id         UUID PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name  VARCHAR(100) NOT NULL,
-    sex        CHAR DEFAULT 'M',
-    dob        DATE
+    id          UUID PRIMARY KEY,
+    first_name  VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100),
+    last_name   VARCHAR(100) NOT NULL,
+    sex         CHAR DEFAULT 'M',
+    dob         DATE
 );
 
 CREATE TABLE IF NOT EXISTS sys.system
@@ -18,11 +19,11 @@ CREATE TABLE IF NOT EXISTS sys.system
 
 CREATE TABLE IF NOT EXISTS client.auxiliary_id
 (
-    id         SERIAL PRIMARY KEY,
-    subject_id UUID         NOT NULL,
-    type       VARCHAR(50)  NOT NULL,
-    value      VARCHAR(100) NOT NULL,
-    source_system_id UUID NOT NULL,
+    id               SERIAL PRIMARY KEY,
+    subject_id       UUID         NOT NULL,
+    type             VARCHAR(50)  NOT NULL,
+    value            VARCHAR(100) NOT NULL,
+    source_system_id UUID         NOT NULL,
 
     CONSTRAINT client_auxiliary_id_client_subject_id_fk
         FOREIGN KEY (subject_id)

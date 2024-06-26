@@ -22,7 +22,7 @@ class JwtTokenAuthFilter(
 ) : WebFilter {
 
     companion object {
-        private const val headerPrefix = "Bearer "
+        private const val HEADER_PREFIX = "Bearer "
     }
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
@@ -39,7 +39,7 @@ class JwtTokenAuthFilter(
 
     private fun resolveToken(request: ServerHttpRequest): String? {
         val bearerToken = request.headers[HttpHeaders.AUTHORIZATION]?.first()
-        if (!bearerToken.isNullOrEmpty() && bearerToken.startsWith(headerPrefix)) {
+        if (!bearerToken.isNullOrEmpty() && bearerToken.startsWith(HEADER_PREFIX)) {
             return bearerToken.substring(7)
         }
         return null

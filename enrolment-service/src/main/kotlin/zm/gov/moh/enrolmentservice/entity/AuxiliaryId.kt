@@ -7,7 +7,7 @@ import java.util.UUID
 @Table(name = "auxiliary_id", schema = "client")
 data class AuxiliaryId(
         @Id
-        var id: Int,
+        var id: Int = 0,
         var subjectId: UUID,
         var type: String,
         var value: String,

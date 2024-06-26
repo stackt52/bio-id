@@ -1,17 +1,23 @@
 import Box from "@mui/material/Box";
 import {Container} from "@mui/material";
-import LoginForm from "../common/LoginForm";
+import LoginForm from "../forms/LoginForm";
+import Toolbar from "@mui/material/Toolbar";
 
 export default function Login() {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'row', minHeight: '100vh', alignItems: 'stretch'}}>
-            <Container sx={{flex: '2'}}>
+            <Container sx={{flex: '2', position: 'relative'}}>
+                {/*<Toolbar sx={{justifyContent: 'right', position: 'absolute', top: 0, right: 0, left: 0}}>*/}
+                {/*    <a href="/public/docs/index.html">*/}
+                {/*        Documentation*/}
+                {/*    </a>*/}
+                {/*</Toolbar>*/}
                 <LoginForm></LoginForm>
             </Container>
 
             <Container sx={{
-                backgroundImage: 'linear-gradient(to bottom right, #0021f3, #0277bd)',
+                backgroundColor: '#63708D',
                 flex: '1',
                 padding: '20px',
                 position: 'relative',
@@ -28,7 +34,7 @@ export default function Login() {
                     my: '10px',
                     fontSize: 'body2.fontSize',
                     color: 'primary.contrastText'
-                }}>A centralized identity verification system.</Box>
+                }}>A centralized client management system.</Box>
 
                 <Box sx={{
                     width: '320px',

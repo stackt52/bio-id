@@ -47,6 +47,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     testImplementation("io.projectreactor:reactor-test")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.5")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("io.netty:netty-resolver-dns-native-macos:4.1.109.Final")
 }

@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Fingerprint Search API
-  description: API for searching clients using fingerprint images or templates
+  title: Search Service API
+  description: Provides functionalities for unique verification and identification of clients using fingerprint images.
 paths:
   /search:
     post:
       tags:
         - Search
-      summary: Find a client using a given fingerprint image
+      summary: Find a client using a given fingerprint image.
       requestBody:
         required: true
         content:
@@ -21,20 +21,24 @@ paths:
                   format: binary
       responses:
         '200':
-          description: Successful operation
+          description: Successful found client with matching fingerprint.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClientDTO'
-        '400':
-          description: Bad request
+        400:
+          description: Request payload not formatted properly.
+        401:
+          description: Not authorized to perform action.
+        404:
+          description: No client found with matching fingerprint image.
       operationId: searchClient
 
   /search/any:
     post:
       tags:
         - Search
-      summary: Find a client using a given collection of fingerprint templates
+      summary: Find a client using a given collection of fingerprint templates.
       requestBody:
         required: true
         content:
@@ -50,8 +54,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MatchScore'
-        '400':
-          description: Bad request
+        400:
+          description: Request payload not formatted properly.
+        401:
+          description: Not authorized to perform action.
       operationId: searchAny
 
 components:
@@ -119,9 +125,8 @@ components:
     Sex:
       type: string
       enum:
-        - Male
-        - Female
-        - Other
+        - M
+        - F
 
     Position:
       type: string

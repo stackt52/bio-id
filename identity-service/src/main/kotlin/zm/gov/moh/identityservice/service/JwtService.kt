@@ -13,7 +13,7 @@ import java.util.*
 @Service
 class JwtService {
     companion object {
-        private val SECRET = Jwts.SIG.HS256.key().build()
+        private val SECRET = Jwts.SIG.HS512.key().build()
     }
 
     fun validateToken(token: String) {
@@ -45,9 +45,8 @@ class JwtService {
             .claims(claims)
             .subject(userName)
             .issuedAt(Date(System.currentTimeMillis()))
-            .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 30))
+            .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 600)) // 10hrs
             .signWith(SECRET)
             .compact()
     }
-
 }

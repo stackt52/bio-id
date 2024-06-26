@@ -10,3 +10,10 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+spring:
+  codec:
+    max-in-memory-size: 3000KB
+  webflux:
+    problemdetails:
+      enabled: true

@@ -11,6 +11,6 @@ class R2dbcConfigurationProperties {
     lateinit var url: String
 
     override fun toString(): String {
-        return "{username: $username, password: $password, url: $url}"
+        return "{username: $username, password: '***', url: $url}"
     }
 }

@@ -1,0 +1,18 @@
+<buildprofiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd">
+    <variables>
+        <primary-color>aqua</primary-color>
+        <custom-favicons>icon.svg</custom-favicons>
+        <header-logo>icon.svg</header-logo>
+        <product-web-url>https://help.example.com</product-web-url>
+        <download-title>Get Awesome App</download-title>
+        <download-page>https://example.com</download-page>
+        <showDownloadButton>true</showDownloadButton>
+    </variables>
+    <build-profile instance="d">
+        <variables>
+            <noindex-content>true</noindex-content>
+            <offline-docs>false</offline-docs>
+        </variables>
+    </build-profile>
+</buildprofiles>

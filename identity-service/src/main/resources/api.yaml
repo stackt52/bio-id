@@ -1,0 +1,214 @@
+openapi: 3.0.3
+info:
+  title: Identity Service API
+  description: Provide user management functionality (authentication and authorization).
+  version: 1.0.0
+paths:
+  /auth/users:
+    # Get method
+    get:
+      summary: Get all accounts.
+      description: Returns all enrolled user account (service accounts) created.
+      tags:
+        - Auth
+        - Security
+      operationId: getUsers
+      responses:
+        200:
+          description: Successful response.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserDTOList"
+        401:
+          description: Not authorized to perform action.
+    # POST Method
+    post:
+      summary: Create user account
+      description: Create a new user account.
+      tags:
+        - Auth
+        - Security
+      operationId: addUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDTO"
+            example:
+              name: "System X"
+              email: "systemx@email.com"
+              password: "password"
+
+      responses:
+        201:
+          description: Successfully created user.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+        400:
+          description: Request payload not formatted properly.
+        401:
+          description: Not authorized to perform action.
+
+  /auth/users/{username}:
+    put:
+      summary: Update user password
+      description: Updates the password of the user with matching username.
+      tags:
+        - Auth
+        - Security
+      operationId: updateUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: Lookup user with matching username
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentialDTO"
+            example:
+              username: "systemx@email.com"
+              password: "new-password"
+
+      responses:
+        204:
+          description: Successfully updated users password
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserDTO"
+        400:
+          description: Can't find user with matching provided username.
+        401:
+          description: Not authorized to perform action.
+
+  /auth/users/login:
+    post:
+      summary: Log in user
+      description: Logs in user with valid user security credentials.
+      tags:
+        - Auth
+        - Security
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCredentialDTO"
+            example:
+              username: "systemx@email.com"
+              password: "password"
+      responses:
+        200:
+          description: Successfully logs in user.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AuthDTO"
+              example:
+                username: "systemx@email.com"
+                name: "System X"
+                token: "xxxxx.yyyyy.zzzzz"
+        401:
+          description: Wrong username or password
+        400:
+          description: Request payload not formatted properly
+
+  /auth/token/validate:
+    post:
+      summary: Validate token
+      description: Verify if provided token is valid.
+      tags:
+        - Auth
+        - Security
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthDTO"
+            example:
+              username: "systemx@email.com"
+              name: "System X"
+              token: "xxxxx.yyyyy.zzzzz"
+      responses:
+        200:
+          description: Token is valid
+        401:
+          description: Invalid token provided
+
+components:
+  schemas:
+    AuthDTO:
+      type: object
+      required:
+        - username
+        - name
+        - token
+      properties:
+        username:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+      example:
+        username: "systemx@email.com"
+        name: "System X"
+        token: "xxxxx.yyyyy.zzzzz"
+
+    UserCredentialDTO:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        username: "systemx@email.com"
+        password: "password"
+
+    UserDTOList:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserDTO"
+
+    UserDTO:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        active:
+          type: boolean
+        lastDateUpdated:
+          type: string
+        lastTimeUpdated:
+          type: string
+      example:
+        id: "0b6f8ca3-2262-4520-b3ae-af67ddaba70d"
+        name: "System X"
+        email: "systemx@email.com"
+        password: ""
+
+  

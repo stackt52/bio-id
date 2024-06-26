@@ -18,3 +18,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  codec:
+    max-in-memory-size: 3000KB
+  webflux:
+    problemdetails:
+      enabled: true

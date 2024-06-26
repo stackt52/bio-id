@@ -10,11 +10,12 @@ import java.util.UUID
 
 @Table(name = "subject", schema = "client")
 data class Subject(
-        @Id
-        var id: UUID = UUID.randomUUID(),
-        val firstName: String = "",
-        val lastName: String = "",
-        val sex: Sex = Sex.M,
-        @Column("dob")
-        val dateOfBirth: LocalDate = Constants.NULL_DATE,
+    @Id
+    var id: UUID = UUID.randomUUID(),
+    val firstName: String = "",
+    var middleName: String? = null,
+    val lastName: String = "",
+    val sex: Sex = Sex.M,
+    @Column("dob")
+    val dateOfBirth: LocalDate = Constants.NULL_DATE,
 ) 
