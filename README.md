@@ -63,21 +63,20 @@ Creates a [Eureka](https://spring.io/guides/gs/service-registration-and-discover
 
 ### 5. Enrolment Service
 The `enrolment service` handles all enrolment operations by providing functionalities for enrolling new clients for 
-biometrics fingerprint verification. The information required when enrolling new clients a basic client profile, 
+biometrics fingerprint verification. The information required when enrolling new clients is a basic client profile, 
 fingerprint images, and an auxiliary ID used to identify 
 
 ### 6. Bio Data Service
-The `boi-data service` is the service that is in change of storing the fingerprint images of clients enrolled. It also 
+The `boi-data service` is the service that is in charge of storing the fingerprint images of clients enrolled. It also 
 offers efficient caching strategies for efficient retrieval of captured images that are used by the search service.
 
 ### 7. Search Service
-The `search service` implements [SourceAFI](https://sourceafis.machinezoo.com/java) fingerprint verification algorithm for 
-identifying for performing 1:1 verification against the probe and stored candidates.
+The `search service` implements client search using biometrics fingerprints. It uses the [SourceAFI](https://sourceafis.machinezoo.com/java) 
+fingerprint verification algorithm for identifying and performing 1:1 verification against the `prob` and registered candidates.
 
 ### 8. Console Service
-The `console service` offers functionalities geared for the administration and monitoring of the BioID system. It integrates 
-directly with available services through the service discovery and doesn't make calls via the API Gateway.
+The `console service` offers functionalities for managing the BioID system. It has a [React](https://react.dev/) frontend web application that has features 
+for managing users, and enrolments, and a dashboard for monitoring certain KPIs.
 
 ### 9. Identity Service
-The `identity-service` offers identity management services for the **bio-data-service**. It supports user registration, 
-auth token generation and validation.
+The `identity-service` offers identity management functionalities for client applications accessing the BioID services.
