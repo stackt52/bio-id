@@ -8,11 +8,11 @@ export default function Login() {
     return (
         <Box sx={{display: 'flex', flexDirection: 'row', minHeight: '100vh', alignItems: 'stretch'}}>
             <Container sx={{flex: '2', position: 'relative'}}>
-                <Toolbar sx={{justifyContent: 'right', position: 'absolute', top: 0, right: 0, left: 0}}>
-                    <a href="/public/docs/index.html">
-                        Documentation
-                    </a>
-                </Toolbar>
+                {/*<Toolbar sx={{justifyContent: 'right', position: 'absolute', top: 0, right: 0, left: 0}}>*/}
+                {/*    <a href="/public/docs/index.html">*/}
+                {/*        Documentation*/}
+                {/*    </a>*/}
+                {/*</Toolbar>*/}
                 <LoginForm></LoginForm>
             </Container>
 
